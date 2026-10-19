@@ -8,7 +8,7 @@ export const CONFIG = {
     locale: 'th-TH', timeZone: 'Asia/Bangkok',
   },
   meta: {
-    title: 'Happy Birthday, Mimiw — a little birthday story',
+    title: 'HBD Mimiw ♡',
     description: 'มีจดหมายและเซอร์ไพรส์เล็ก ๆ รอมิมิวอยู่ เปิดดูด้วยกันนะ',
     // เปลี่ยนที่นี่หากโดเมนจริงบน Vercel ได้ชื่ออื่น แล้ว build / deploy ใหม่
     siteUrl: 'https://mimiw-surprise.vercel.app',
@@ -17,6 +17,8 @@ export const CONFIG = {
     image: '/assets/images/mimiw-birthday-25-og-v1.jpg',
     imageAlt: 'Happy Birthday, Mimiw — ปกสีครีมชมพู ซองจดหมาย เค้กเทียนเลข 25 และผีเสื้อ',
     imageWidth: 1200, imageHeight: 630,
+    favicon: '/favicon.svg?v=25', faviconPng: '/favicon-32.png?v=25',
+    faviconIco: '/favicon.ico?v=25', touchIcon: '/apple-touch-icon.png?v=25',
   },
   journey: {
     // สีจะไหลต่อกันตามตำแหน่งที่เลื่อน เปลี่ยนแต่ละบทได้ที่นี่
