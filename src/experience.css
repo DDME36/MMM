@@ -1,0 +1,200 @@
+/* Free vertical storytelling. Overrides the former full-screen slide controller. */
+html, body { height: auto; overflow-x: clip; overflow-y: auto; scroll-snap-type: none; }
+html { scroll-padding-top: 20px; }
+body { background: var(--paper); }
+.birthday-experience { position: relative; isolation: isolate; color: var(--ink); min-height: 100svh; }
+.experience-main { position: relative; z-index: 1; outline: none; }
+.experience-main.story-awaiting { visibility: hidden; }
+.exp-section { position: relative; padding: 100px max(7%, calc((100vw - 1200px)/2)); overflow: clip; isolation: isolate; }
+.exp-section-heading { max-width: 680px; margin: 0 auto 70px; text-align: center; }
+.exp-section-heading h2 { font: 400 clamp(44px, 5vw, 70px)/1.04 var(--display); letter-spacing: -.03em; }
+.exp-section-heading h2 em { color: var(--rose); font-weight: 400; }
+.exp-section-heading p { font-size: 14px; color: var(--muted); line-height: 1.9; margin-top: 23px; }
+.birthday-experience button:focus-visible, .birthday-experience a:focus-visible { outline: 2px solid var(--rose); outline-offset: 6px; }
+.experience-controls { z-index: 105; }
+.experience-controls > button { background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+.audio-error { position: absolute; right: 0; top: 48px; width: 215px; padding: 12px; background: var(--paper); color: var(--ink); box-shadow: 0 8px 20px #433a3615; font-size: 12px; line-height: 1.6; border-radius: 12px; }
+
+.floating-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; color: var(--rose); }
+.floating-particles > span { position: absolute; width: var(--particle-size); height: var(--particle-size); animation: ambient-drift var(--particle-time) var(--particle-delay) ease-in-out infinite; opacity: 0; }
+.particle-bokeh { background: var(--rose); border-radius: 50%; filter: blur(1.5px); }
+@keyframes ambient-drift { 0%,100% { opacity: 0; transform: translate3d(0,20px,0); } 35%,65% { opacity: .22; } 80% { transform: translate3d(20px,-85px,0); opacity: 0; } }
+.motion-paused .floating-particles > span { animation-play-state: paused; }
+
+.experience-gate { background: var(--paper); }
+.experience-gate .envelope-back { background: var(--envelope); }
+.experience-gate .envelope-pocket { background: var(--envelope); }
+.experience-gate .envelope-pocket::after { background: var(--envelope-flap); }
+.experience-gate .envelope-flap { background: var(--envelope-flap); }
+.experience-gate .invitation-letter { background: var(--paper); }
+.experience-gate .envelope-seal { background: var(--rose); color: var(--paper); box-shadow: 0 5px 10px #69374526, inset 0 0 0 4px #ffffff30; }
+.experience-gate .envelope-addressee { color: var(--ink); }
+
+.exp-hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; padding-top: 35px; padding-bottom: 35px; }
+.exp-date { color: var(--muted); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; padding-right: 100px; }
+.exp-hero-layout { display: grid; grid-template-columns: 1.15fr 1fr; align-items: center; gap: 9%; margin: 65px 0; }
+.hero-greeting { font: italic clamp(36px,4.3vw,63px)/1.1 var(--display); color: var(--rose); margin-bottom: 18px; }
+.exp-hero h1 { font: 700 clamp(55px,7vw,96px)/1.3 'Mali',sans-serif; letter-spacing: -.03em; }
+.exp-hero h1 > span { display: inline-block; }
+.exp-hero .name-period { color: var(--rose); }
+.exp-hero-dedication { font-size: 14px; color: var(--muted); line-height: 1.9; margin: 20px 0 12px; max-width: 38ch; }
+.exp-handwritten { font: italic 18px var(--display); color: var(--rose); }
+.exp-hero-portrait { position: relative; padding: 10px 12px 35px 0; }
+.exp-hero-portrait figure { padding: 14px 14px 0; background: var(--paper); box-shadow: 0 16px 45px #47372a1a; transform: rotate(6deg); position: relative; }
+.exp-hero-portrait img { width: 100%; height: clamp(310px,39vw,470px); object-fit: cover; display: block; }
+.exp-hero-portrait figcaption { min-height: 58px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font: italic 15px var(--display); color: var(--muted); }
+.exp-birthday-seal { position: absolute; bottom: -7px; left: -30px; width: 95px; height: 95px; background: var(--rose); color: var(--paper); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-12deg); outline: 1px dashed var(--paper); outline-offset: -7px; }
+.exp-birthday-seal small { font-size: 8px; letter-spacing: .18em; }
+.exp-birthday-seal strong { font: 400 43px/.95 var(--display); }
+.life-counter { margin-top: 36px; max-width: 450px; padding-top: 25px; border-top: 1px solid var(--line); }
+.life-counter > p { color: var(--muted); font-size: 12px; }
+.life-counter-values { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+.life-counter-values > div { display: flex; flex-direction: column; gap: 6px; }
+.life-counter-values span { font: 400 clamp(30px,3.7vw,48px)/1.1 var(--display); color: var(--rose); font-variant-numeric: tabular-nums; }
+.life-counter-values small { font-size: 10px; color: var(--muted); }
+.life-counter .counter-note { font-size: 10px; margin-top: 17px; }
+.exp-scroll-hint { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 13px; font-size: 10px; color: var(--muted); }
+.exp-scroll-hint svg { animation: bounce-subtle 2s ease-in-out infinite; }
+
+/* Existing bento: keep its layout, photograph and all signature animations. */
+.birthday-experience .rewind-bento-section { min-height: 100svh; height: auto; max-height: none; overflow: clip; padding: 90px 7%; background: var(--sage); }
+.birthday-experience .bento-heading { margin-bottom: 35px; }
+.birthday-experience .bento-heading p { white-space: pre-line; }
+.birthday-experience .rewind-bento-grid { max-height: 610px; height: 65vh; min-height: 450px; }
+.birthday-experience .rewind-bento-item { background-color: var(--glass); }
+.birthday-experience .rewind-item-1 { background-color: var(--paper-deep); }
+.birthday-experience .rewind-item-3 { background: transparent; }
+.birthday-experience .rewind-item-4 { background-color: var(--icing); }
+.birthday-experience .rewind-item-8 { background-color: var(--sage); }
+.birthday-experience .rewind-item-4 .number-counter { color: var(--rose) !important; }
+.birthday-experience .music-card { background: var(--sage); }
+.birthday-experience .music-card-title, .birthday-experience .music-card-top-right { color: var(--ink); }
+.birthday-experience .music-card-bottom { background: var(--rose); }
+.birthday-experience .bento-heading p, .birthday-experience .bento-note, .birthday-experience .bento-note strong { color: var(--muted); }
+.birthday-experience .rewind-bento-item .chat-bubble { background: var(--rose) !important; }
+.birthday-experience .story-scroll-cue-btn { margin-top: 30px !important; }
+
+.memory-lane { background: color-mix(in srgb,var(--blush) 72%,transparent); }
+.memory-lane-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12%; row-gap: 100px; padding: 0 18px 50px; }
+.lane-photo { min-width: 0; }
+.lane-photo:nth-child(2n) { margin-top: 130px; }
+.lane-polaroid { display: block; width: 100%; padding: 14px 14px 0; border: 0; background: var(--paper); box-shadow: 0 14px 35px #57372817; position: relative; color: var(--rose); }
+.lane-polaroid img { display: block; width: 100%; aspect-ratio: 3/3.8; object-fit: cover; }
+.lane-caption { min-height: 65px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font: 700 14px 'Mali',sans-serif; padding: 0 5px; }
+.lane-photo > figcaption { text-align: center; font: italic 18px var(--display); color: var(--muted); margin-top: 28px; }
+
+.secret-section { padding-top: 110px; padding-bottom: 120px; }
+.secret-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; width: 100%; min-width: 0; max-width: 1100px; margin: 0 auto; }
+.secret-card-slot { width: 100%; min-width: 0; }
+.secret-card { display: block; width: 100%; min-width: 0; min-height: 330px; height: auto; border: 0; padding: 0; perspective: 1200px; background: none; text-align: center; border-radius: 16px; }
+/* Both faces share a grid cell and contribute to its height, even when hidden.
+   This keeps longer CONFIG messages inside the card without a layout jump. */
+.secret-card-inner { position: relative; display: grid; width: 100%; min-width: 0; min-height: inherit; transform-style: preserve-3d; transition: transform .85s cubic-bezier(.22,1,.36,1); }
+.secret-card.is-flipped .secret-card-inner { transform: rotateY(180deg); }
+.secret-face { position: relative; grid-area: 1 / 1; min-width: 0; min-height: inherit; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 23px; padding: 28px; overflow: hidden; background: var(--paper); border: 1px solid color-mix(in srgb,var(--line) 75%,transparent); color: var(--rose); }
+/* aria-hidden also controls visual visibility; 3D backface culling alone is not reliable. */
+.secret-face[aria-hidden="true"] { visibility: hidden; pointer-events: none; }
+.secret-face > strong, .secret-back > span { width: 100%; min-width: 0; overflow-wrap: break-word; word-break: normal; }
+.secret-face > svg { flex-shrink: 0; }
+.secret-number { position: absolute; top: 20px; left: 22px; font: italic 17px var(--display); color: var(--muted); }
+.secret-face strong { font: 700 17px 'Mali',sans-serif; }
+.secret-face small { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 9px; }
+.secret-front > svg { margin: 15px 0 0; }
+.secret-back { transform: rotateY(180deg); background: color-mix(in srgb,var(--blush) 85%,var(--paper)); gap: 17px; }
+.secret-back > span { color: var(--ink); font-size: 14px; line-height: 1.9; }
+.secret-back > strong { font-size: 15px; }
+.secret-back small { margin-top: auto; }
+.secret-card:hover:not(.is-flipped) .secret-front { background: color-mix(in srgb,var(--paper) 80%,var(--blush)); }
+
+.wish-cake-section { text-align: center; background: color-mix(in srgb,var(--sage) 45%,transparent); padding-bottom: 100px; }
+.wish-cake-section .exp-section-heading { margin-bottom: 40px; }
+.birthday-cake-art { position: relative; margin: 20px auto 35px; width: min(350px,85vw); height: 340px; isolation: isolate; }
+.cake-plate { position: absolute; left: 0; right: 0; bottom: 7px; height: 44px; background: var(--paper); border-radius: 50%; box-shadow: 0 12px 20px #433a3618; }
+.cake-bottom-tier { position: absolute; left: 23px; right: 23px; top: 207px; height: 96px; background: var(--cake-shade); border-radius: 0 0 50% 50% / 0 0 24% 24%; box-shadow: inset 0 -13px 0 #ffffff12; }
+.cake-top-tier { position: absolute; left: 23px; right: 23px; top: 137px; height: 155px; background: var(--cake); border-radius: 50% 50% 50% 50% / 12% 12% 13% 13%; }
+.cake-icing { position: absolute; left: 23px; right: 23px; top: 128px; height: 61px; background: var(--icing); border-radius: 50%; box-shadow: 0 12px 0 var(--icing); }
+.cake-icing::after { content: ''; position: absolute; left: 0; right: 0; top: 27px; height: 55px; background: radial-gradient(ellipse at 50% 0,var(--icing) 63%,transparent 65%) 0 0/38px 45px repeat-x; }
+.cake-decoration { position: absolute; top: 227px; left: 60px; right: 60px; display: flex; justify-content: space-between; color: var(--icing); }
+.cake-decoration svg { width: 17px; height: 17px; fill: currentColor; stroke-width: 1; }
+.candle-button { position: absolute; left: 50%; top: 59px; transform: translateX(-50%); display: flex; align-items: end; justify-content: center; gap: 9px; padding: 0 18px; background: transparent; border: 0; border-radius: 18px; color: var(--rose); overflow: visible; }
+.candle-button:disabled { cursor: default; }
+.number-candle { display: block; position: relative; width: 56px; height: 86px; flex: 0 0 56px; }
+.candle-digit { position: relative; display: block; width: 56px; height: 86px; overflow: visible; }
+.candle-wax-shadow { stroke: var(--cake-shade); stroke-width: 12px; }
+.candle-wax { stroke: var(--rose); stroke-width: 11px; }
+.candle-wax-highlight { stroke: var(--icing); stroke-width: 2px; opacity: .28; }
+.candle-stem { position: absolute; left: calc(50% - 1.5px); bottom: -12px; width: 3px; height: 24px; border-radius: 2px; background: var(--icing); box-shadow: 1px 0 0 var(--cake-shade); }
+.candle-tip { position: absolute; top: 0; width: 0; height: 0; }
+.candle-wick { position: absolute; width: 2px; height: 14px; background: var(--ink); left: -1px; top: -5px; border-radius: 1px; }
+.candle-flame { position: absolute; width: 17px; height: 28px; left: -8.5px; top: -30px; border-radius: 60% 40% 55% 45%; background: var(--flame); transform-origin: center bottom; box-shadow: 0 0 14px 3px color-mix(in srgb,var(--flame) 30%,transparent); animation: candle-flicker 1.8s ease-in-out infinite alternate; }
+.number-candle:nth-child(2) .candle-flame { animation-delay: -.8s; }
+.candle-flame::after { content: ''; position: absolute; width: 8px; height: 18px; left: 5px; bottom: 1px; border-radius: 70% 30% 50% 50%; background: var(--flame-core); }
+@keyframes candle-flicker { 0%,100% { transform: rotate(-5deg) scaleY(1); } 35% { transform: rotate(6deg) scaleY(.85); } 70% { transform: rotate(-3deg) scaleY(1.1); } }
+.candle-smoke { position: absolute; left: 0; top: -5px; }
+.candle-smoke i { position: absolute; width: 12px; height: 18px; border-radius: 50%; background: var(--muted); filter: blur(4px); opacity: 0; animation: candle-smoke 1.8s ease-out both; }
+.candle-smoke i:nth-child(2) { animation-delay: .2s; }
+.candle-smoke i:nth-child(3) { animation-delay: .4s; }
+@keyframes candle-smoke { 0% { opacity: 0; transform: translate(-5px,0) scale(.4); } 20% { opacity: .3; } 100% { opacity: 0; transform: translate(15px,-95px) scale(2); } }
+.wish-letter-reveal { width: 100%; }
+.exp-birthday-letter { max-width: 680px; margin: 30px auto 0; padding: 45px 50px; text-align: left; background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line); border-radius: 16px; }
+.exp-letter-meta { display: flex; justify-content: space-between; gap: 15px; padding-bottom: 22px; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+.exp-birthday-letter h3 { font: 700 25px 'Mali',sans-serif; color: var(--rose); display: flex; align-items: center; gap: 12px; margin: 25px 0; }
+.typed-wish { font-size: 15px; line-height: 2.1; white-space: pre-wrap; min-height: 48px; overflow-wrap: anywhere; }
+.typewriter-caret { display: inline-block; width: 1px; height: 1em; margin-left: 3px; background: var(--rose); animation: caret-blink 1s steps(1) infinite; vertical-align: text-bottom; }
+.typed-wish.is-complete .typewriter-caret { display: none; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+.read-whole-wish { display: block; margin: 20px 0 0 auto; font-size: 11px; color: var(--muted); background: none; border: 0; border-bottom: 1px solid var(--line); padding: 7px 0; }
+.exp-letter-signoff { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 30px; padding-top: 23px; border-top: 1px solid var(--line); color: var(--rose); }
+.exp-letter-signoff > span { font: italic 20px var(--display); }
+
+@media(max-width:900px) { .exp-hero-layout { gap: 6%; } .secret-grid { gap: 15px; } .secret-face { padding: 22px; } .secret-face strong { font-size: 15px; } .secret-back > span { font-size: 13px; } }
+@media(max-width:768px) {
+  .exp-section { padding: 70px 7%; }
+  .exp-section-heading { margin-bottom: 45px; }
+  .exp-section-heading h2 { font-size: clamp(39px,10vw,54px); }
+  .exp-section-heading p { font-size: 13px; margin-top: 20px; }
+  .exp-hero { min-height: 100svh; padding-top: 27px; padding-bottom: 30px; }
+  .exp-date { font-size: 9px; min-height: 30px; }
+  .exp-hero-layout { display: flex; flex-direction: column; gap: 45px; margin: 40px 0; }
+  .exp-hero-copy { text-align: center; width: 100%; }
+  .hero-greeting { font-size: 42px; margin-bottom: 12px; }
+  .exp-hero h1 { font-size: clamp(52px,15vw,75px); }
+  .exp-hero-dedication { font-size: 13px; margin: 15px auto 12px; }
+  .exp-handwritten { font-size: 17px; }
+  .life-counter { margin: 28px auto 0; padding-top: 20px; }
+  .life-counter-values { gap: 8px; }
+  .life-counter-values span { font-size: clamp(30px,8vw,40px); }
+  .life-counter > p { font-size: 11px; }
+  .life-counter .counter-note { font-size: 9px; }
+  .exp-hero-portrait { width: 82%; max-width: 340px; padding-bottom: 30px; }
+  .exp-hero-portrait img { height: 340px; }
+  .exp-hero-portrait figure { padding: 11px 11px 0; }
+  .exp-hero-portrait figcaption { font-size: 13px; min-height: 50px; }
+  .exp-birthday-seal { width: 78px; height: 78px; left: -22px; bottom: 0; }
+  .exp-birthday-seal strong { font-size: 36px; }
+  .birthday-experience .rewind-bento-section { padding: 65px 7%; }
+  .birthday-experience .rewind-bento-grid { min-height: 0; height: auto; max-height: none; }
+  .memory-lane-grid { display: block; padding: 0 15px; }
+  .lane-photo { width: 88%; margin: 0 0 70px; }
+  .lane-photo:nth-child(2n) { margin: 0 0 70px auto; }
+  .lane-polaroid { padding: 11px 11px 0; }
+  .lane-polaroid img { aspect-ratio: 3/3.6; }
+  .lane-caption { font-size: 13px; min-height: 55px; }
+  .lane-photo > figcaption { font-size: 16px; margin-top: 22px; }
+  .lane-photo:last-child { margin-bottom: 10px; }
+  .secret-grid { grid-template-columns: 1fr; gap: 23px; max-width: 355px; }
+  .secret-card { min-height: 285px; height: auto; }
+  .secret-face { padding: 28px; }
+  .secret-face strong { font-size: 17px; }
+  .secret-back > span { font-size: 14px; }
+  .wish-cake-section { padding-bottom: 70px; }
+  .exp-birthday-letter { padding: 29px 23px; }
+  .exp-letter-meta { font-size: 9px; gap: 10px; }
+  .exp-birthday-letter h3 { font-size: 20px; gap: 7px; }
+  .typed-wish { font-size: 13px; line-height: 2; }
+  .exp-letter-signoff > span { font-size: 18px; }
+}
+@media(max-width:380px) { .hero-greeting { font-size: 36px; } .exp-hero-portrait img { height: 280px; } .life-counter-values span { font-size: 29px; } .exp-birthday-letter { padding-left: 18px; padding-right: 18px; } }
+html[data-motion="reduced"] .floating-particles { display: none; }
+html[data-motion="reduced"] .secret-card-inner { transition-duration: .01ms; }
+html[data-motion="reduced"] .candle-flame { animation: none; }

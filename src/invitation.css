@@ -1,0 +1,84 @@
+/* The envelope is the only entrance control; the story itself is a scroll presentation. */
+:root { --header-height: 0px; }
+.story-awaiting { visibility: hidden; }
+.story-entered { visibility: visible; }
+#main:focus { outline: none; }
+.hero-section { min-height: 100svh; padding-top: 36px; padding-bottom: 36px; }
+.hero-date { padding-right: 110px; }
+.hero-date > span:last-child { display: none; }
+.hero-layout { margin-top: 34px; margin-bottom: 34px; }
+.hero-copy .hero-postscript { margin-top: 28px; }
+.story-scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--muted); font-size: 10px; }
+.story-scroll-cue > svg { animation: invitation-scroll-cue 2.5s ease-in-out infinite; }
+@keyframes invitation-scroll-cue { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+.quiet-controls { position: fixed; top: max(20px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right)); z-index: 45; display: flex; align-items: center; gap: 7px; }
+.quiet-controls > button { display: inline-flex; align-items: center; justify-content: center; width: 38px; min-width: 38px; height: 38px; min-height: 38px; padding: 0; border: 1px solid #dcd2c5; background: #f8f4eced; color: var(--muted); border-radius: 50%; box-shadow: none; }
+.quiet-controls > button:hover { border-color: var(--rose); color: var(--rose); }
+.polaroid-front > img { object-fit: cover; object-position: center 40%; }
+.auto-birthday { padding-bottom: 90px; }
+.auto-birthday .birthday-letter { margin-bottom: 0; }
+
+.letter-invitation { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 70px 24px; background: var(--paper); color: var(--ink); overflow: hidden; touch-action: none; }
+.invitation-date { position: absolute; top: max(35px, env(safe-area-inset-top)); font-size: 9px; letter-spacing: .22em; color: var(--muted); }
+.invitation-heading { text-align: center; margin-bottom: 70px; position: relative; z-index: 3; }
+.invitation-flower { color: var(--rose); display: inline-flex; margin-bottom: 24px; }
+.invitation-heading h1 { font: 400 clamp(48px, 5.3vw, 76px)/1.03 var(--display); letter-spacing: -.03em; }
+.invitation-heading h1 em { color: var(--rose); font-weight: 400; }
+.invitation-heading p { color: var(--muted); font-size: 13px; margin-top: 24px; }
+.invitation-envelope { position: relative; display: block; width: min(380px, 80vw); height: 240px; margin: 0; padding: 0; border: 0; background: none; border-radius: 8px; color: var(--rose); cursor: pointer; perspective: 1200px; isolation: isolate; transform: rotate(-4deg); transition: transform .45s var(--ease); flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.invitation-envelope:hover:not(:disabled) { transform: rotate(-1deg) translateY(-5px); }
+.invitation-envelope:focus-visible { outline: 1px dashed var(--rose); outline-offset: 15px; }
+.invitation-envelope:disabled { cursor: default; }
+.envelope-back { position: absolute; inset: 0; z-index: 0; border-radius: 8px; background: #d7b9ab; box-shadow: 0 22px 55px #70544824; }
+.invitation-letter { position: absolute; inset: 12px 18px 22px; z-index: 2; background: #fffdf7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; box-shadow: 0 3px 12px #704b3420; }
+.invitation-letter-to { font: italic 21px var(--display); }
+.invitation-letter-age { font: italic 70px/.9 var(--display); }
+.invitation-letter-message { font: italic 13px var(--display); color: var(--muted); }
+.invitation-letter > svg { margin-top: 4px; }
+.envelope-pocket { position: absolute; inset: 0; z-index: 3; border-radius: 8px; background: #e4c9b9; clip-path: polygon(0 0, 50% 51%, 100% 0, 100% 100%, 0 100%); }
+.envelope-pocket::after { content: ''; position: absolute; inset: 0; background: #ead4c6; clip-path: polygon(0 100%, 50% 43%, 100% 100%); }
+.envelope-flap { position: absolute; top: 0; left: 0; width: 100%; height: 58%; z-index: 4; background: #ecd9cc; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: center top; backface-visibility: visible; }
+.is-opening .envelope-flap { z-index: 1; }
+.envelope-seal { position: absolute; left: calc(50% - 28px); top: calc(51% - 28px); width: 56px; height: 56px; z-index: 5; display: flex; align-items: center; justify-content: center; color: #f3dbd4; background: var(--rose); border-radius: 50%; box-shadow: 0 5px 10px #69374526, inset 0 0 0 4px #c7808c; }
+.envelope-addressee { position: absolute; z-index: 5; left: 0; right: 0; bottom: 25px; font: italic 15px var(--display); color: #80594b; }
+.invitation-instruction { margin-top: 38px; min-height: 24px; color: var(--muted); font-size: 11px; text-align: center; position: relative; z-index: 6; }
+.invitation-bottom-mark { position: absolute; bottom: max(30px, env(safe-area-inset-bottom)); color: var(--rose); }
+
+@media(max-width:768px) {
+  :root { --header-height: 0px; }
+  .hero-section { min-height: 100svh; padding-top: 28px; padding-bottom: 30px; }
+  .hero-date { min-height: 30px; }
+  .hero-layout { margin-top: 25px; margin-bottom: 25px; }
+  .quiet-controls { top: max(17px, env(safe-area-inset-top)); right: 17px; }
+  .quiet-controls > button { width: 36px; height: 36px; min-height: 36px; min-width: 36px; }
+  .auto-birthday { padding-bottom: 55px; }
+  .invitation-heading { margin-bottom: 62px; }
+  .invitation-heading h1 { font-size: clamp(45px, 12vw, 62px); }
+  .invitation-heading p { font-size: 12px; margin-top: 20px; }
+  .invitation-envelope { width: min(330px, 80vw); height: 210px; }
+  .invitation-letter { gap: 8px; }
+  .invitation-letter-age { font-size: 60px; }
+  .invitation-letter-message { font-size: 11px; }
+  .invitation-instruction { font-size: 10px; margin-top: 32px; }
+}
+@media(max-height:740px) {
+  .letter-invitation { padding-top: 55px; padding-bottom: 45px; }
+  .invitation-heading { margin-bottom: 42px; }
+  .invitation-flower { margin-bottom: 13px; }
+  .invitation-heading h1 { font-size: clamp(40px, 7vh, 60px); }
+  .invitation-heading p { margin-top: 13px; }
+  .invitation-envelope { width: min(310px, 75vw); height: 190px; }
+  .invitation-instruction { margin-top: 25px; }
+}
+@media(max-height:500px) {
+  .letter-invitation { flex-direction: row; gap: 55px; padding: 55px 7%; }
+  .invitation-heading { margin: 0; }
+  .invitation-heading h1 { font-size: 38px; }
+  .invitation-flower, .invitation-bottom-mark { display: none; }
+  .invitation-envelope { width: 240px; height: 155px; }
+  .invitation-letter-age { font-size: 45px; }
+  .invitation-letter { gap: 5px; }
+  .invitation-letter-message { font-size: 10px; }
+  .envelope-seal { width: 44px; height: 44px; left: calc(50% - 22px); top: calc(51% - 22px); }
+  .invitation-instruction { position: absolute; bottom: 20px; margin: 0; }
+}

@@ -1,0 +1,686 @@
+/* Mandatory Scroll Snapping: guarantees strict page-by-page presentation on both desktop & mobile */
+:root {
+  --header-height: 0px;
+}
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.story-main-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.story-slider-track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.story-slide-panel {
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+  max-height: 100svh;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Slide Container Defaults */
+.story-section,
+.rewind-bento-section,
+.moments-snap-page,
+.cake-snap-page,
+.letter-snap-page {
+  min-height: 100svh;
+  height: 100svh;
+  max-height: 100svh;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Hero Section */
+.hero-section {
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 8% 24px;
+}
+
+.hero-scrapbook {
+  height: 440px;
+  flex-shrink: 0;
+  position: relative;
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+}
+
+.hero-polaroid {
+  height: 350px;
+  overflow: hidden;
+}
+
+.hero-polaroid img {
+  display: block;
+  height: calc(100% - 43px);
+  aspect-ratio: auto;
+}
+
+.polaroid-front > img {
+  background: #e5e6d9;
+  object-fit: cover;
+  object-position: center;
+}
+
+.polaroid-back {
+  overflow: visible;
+}
+
+.hero-keepsake {
+  height: calc(100% - 43px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #e4d2cb;
+  color: var(--rose);
+  gap: 14px;
+}
+
+.hero-keepsake > strong {
+  font: italic 96px/0.9 var(--display);
+}
+
+.hero-keepsake > span {
+  font: italic 17px var(--display);
+}
+
+.hero-keepsake > small {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.story-scroll-cue-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 11px;
+  transition: color 0.25s, transform 0.25s;
+}
+
+.story-scroll-cue-btn:hover {
+  color: var(--rose);
+  transform: translateY(2px);
+}
+
+.story-scroll-cue-btn svg {
+  animation: bounce-subtle 2s infinite ease-in-out;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* Bento Section */
+.rewind-bento-section {
+  background: var(--sage);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px 8% 30px;
+}
+
+.rewind-bento-section .bento-heading {
+  margin-bottom: 24px;
+}
+
+.rewind-item-3 {
+  background: transparent;
+}
+
+.name-slider-wrapper {
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.name-switcher-svg {
+  display: block;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+}
+
+.original-name-track {
+  animation: original-name-slide 6s ease-in-out infinite;
+}
+
+.rewind-bento-section:not(:has(.bento-reveal)) .original-name-track {
+  animation-play-state: paused;
+}
+
+@keyframes original-name-slide {
+  0%, 33% { transform: translateY(0); }
+  40%, 73% { transform: translateY(-60px); }
+  80%, 100% { transform: translateY(-120px); }
+}
+
+/* Moments Slide (Slide 3) */
+.moments-snap-page {
+  background: #f1e7e1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.momories-snap-inner {
+  height: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36px 8% 28px;
+}
+
+.momories-snap-inner .memories-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.momories-snap-inner .memories-heading h2 {
+  font: 400 clamp(36px, 4.4vw, 60px)/1.08 var(--display);
+  letter-spacing: -0.03em;
+}
+
+.momories-snap-inner .memories-heading h2 em {
+  color: var(--rose);
+  font-weight: 400;
+}
+
+.momories-snap-inner .memories-heading p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  text-align: right;
+  max-width: 280px;
+}
+
+.memories-carousel-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex: 1;
+  min-height: 280px;
+  max-height: 480px;
+}
+
+.polaroid-slider-wrapper {
+  position: relative;
+  width: min(340px, 78vw);
+  height: min(440px, 52svh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.snap-polaroid {
+  position: absolute;
+  inset: 0;
+  background: #fffcf5;
+  padding: 12px 12px 0;
+  box-shadow: 0 16px 36px #57372822;
+  border-radius: 4px;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.snap-polaroid:active {
+  cursor: grabbing;
+}
+
+.snap-polaroid img {
+  width: 100%;
+  height: calc(100% - 50px);
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.snap-polaroid figcaption {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  font: 700 14px 'Mali', sans-serif;
+  color: var(--rose);
+}
+
+.polaroid-count {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.carousel-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fbf8f1;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 4px 12px #433a3610;
+  transition: all 0.25s;
+  z-index: 10;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--rose);
+  color: #fff;
+  border-color: var(--rose);
+  transform: scale(1.08);
+}
+
+.carousel-dots-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d8c7bd;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s;
+}
+
+.carousel-dot.is-active {
+  width: 24px;
+  border-radius: 10px;
+  background: var(--rose);
+}
+
+.memories-bottom-cue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #e3d2c8;
+}
+
+.scroll-cue-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--rose);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.scroll-cue-action:hover {
+  background: #ecd9cf;
+  transform: translateY(2px);
+}
+
+/* Birthday Cake Slide (Slide 4) */
+.cake-snap-page {
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.cake-snap-inner {
+  height: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 8% 28px;
+}
+
+.cake-snap-inner .birthday-topline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--rose);
+  font: italic 14px var(--display);
+}
+
+.cake-snap-inner h2 {
+  font: 400 clamp(38px, 4.8vw, 66px)/1.06 var(--display);
+  letter-spacing: -0.03em;
+  margin-top: 8px;
+}
+
+.cake-snap-inner h2 em {
+  color: var(--rose);
+  font-weight: 400;
+}
+
+.cake-snap-inner .birthday-description {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.cake-scene-box {
+  position: relative;
+  width: min(540px, 85vw);
+  margin: 12px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cake-image-wrapper {
+  width: 100%;
+  max-height: min(340px, 40svh);
+  border-radius: 45% 45% 8px 8px / 30% 30% 8px 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px #543b2d18;
+}
+
+.cake-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cake-scene-caption {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cake-bottom-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cake-wish-prompt {
+  font: italic 14px var(--display);
+  color: var(--rose);
+}
+
+/* Birthday Letter Slide (Slide 5) */
+.letter-snap-page {
+  background: var(--paper-deep);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.letter-snap-inner {
+  height: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 36px 8% 20px;
+}
+
+.birthday-letter-card {
+  width: 100%;
+  background: #fffdf7;
+  padding: clamp(24px, 4vh, 40px) clamp(24px, 5vw, 48px);
+  border-radius: 8px;
+  box-shadow: 0 18px 50px #66504416;
+  position: relative;
+  text-align: left;
+  border-top: 5px solid var(--rose);
+  flex: 1;
+  max-height: min(600px, 76svh);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.letter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.letter-to {
+  font: 700 13px 'Mali', sans-serif;
+  color: var(--rose);
+}
+
+.letter-title {
+  font: 700 clamp(20px, 2.6vw, 26px) 'Mali', sans-serif;
+  color: var(--rose);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 10px;
+}
+
+.letter-content-body {
+  font-size: clamp(12px, 1.4vw, 14px);
+  line-height: 1.9;
+  color: var(--ink);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.letter-content-body p + p {
+  margin-top: 10px;
+}
+
+.letter-special-note {
+  color: var(--rose);
+  font-weight: 600;
+  background: #fbf0ee;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--rose);
+}
+
+.letter-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--rose);
+  margin-top: 10px;
+}
+
+.snap-site-footer {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Chapter Navigation Dots (Right Edge) */
+.chapter-dots-nav {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chapter-dot-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  position: relative;
+}
+
+.dot-pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c2b2a6;
+  transition: all 0.25s;
+  display: block;
+}
+
+.chapter-dot-btn.is-active .dot-pip {
+  background: var(--rose);
+  transform: scale(1.6);
+  box-shadow: 0 0 8px #a8536766;
+}
+
+.dot-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  font-size: 10px;
+  background: var(--paper);
+  padding: 3px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #00000015;
+  white-space: nowrap;
+  color: var(--ink);
+  transition: opacity 0.2s;
+}
+
+.chapter-dot-btn:hover .dot-tooltip {
+  opacity: 1;
+}
+
+/* Responsive adjustments for Mobile & Tablet */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 24px 6% 20px;
+  }
+  .hero-scrapbook {
+    height: 330px;
+  }
+  .hero-polaroid {
+    height: 250px;
+  }
+  .hero-keepsake > strong {
+    font-size: 72px;
+  }
+  .chapter-dots-nav {
+    display: none;
+  }
+
+  .momories-snap-inner {
+    padding: 24px 6% 20px;
+  }
+  .momories-snap-inner .memories-heading {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .momories-snap-inner .memories-heading h2 {
+    font-size: 32px;
+  }
+  .momories-snap-inner .memories-heading p {
+    text-align: left;
+    margin-top: 6px;
+    font-size: 11px;
+  }
+  .carousel-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .polaroid-slider-wrapper {
+    width: min(290px, 80vw);
+    height: min(360px, 48svh);
+  }
+
+  .cake-snap-inner {
+    padding: 26px 6% 20px;
+  }
+  .cake-snap-inner h2 {
+    font-size: 34px;
+  }
+  .cake-image-wrapper {
+    max-height: 240px;
+  }
+
+  .letter-snap-inner {
+    padding: 24px 6% 16px;
+  }
+  .birthday-letter-card {
+    padding: 20px 18px;
+    max-height: 80svh;
+  }
+  .letter-content-body {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-scrapbook { height: 280px; }
+  .hero-polaroid { height: 220px; }
+  .polaroid-slider-wrapper { height: 320px; }
+  .cake-image-wrapper { max-height: 200px; }
+}
