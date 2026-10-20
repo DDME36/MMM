@@ -10,7 +10,7 @@ after(() => server.close());
 const { livedTime, graphemes } = await server.ssrLoadModule('/src/lib/birthday.ts');
 const { CONFIG } = await server.ssrLoadModule('/src/config.ts');
 const { default: App } = await server.ssrLoadModule('/src/App.tsx');
-const { journeyStops, nextJourneyStop } = await server.ssrLoadModule('/src/lib/journey.ts');
+const { journeyStops, nextJourneyStop, readingStops } = await server.ssrLoadModule('/src/lib/journey.ts');
 
 test('chapter scrolling keeps short chapters intact and adds reading stops in tall chapters', () => {
   assert.deepEqual(journeyStops([0, 800, 1600], 800, 2400), [0, 800, 1600]);
@@ -21,6 +21,33 @@ test('chapter scrolling keeps short chapters intact and adds reading stops in ta
   assert.equal(nextJourneyStop(stops, 4400, 1), undefined);
   assert.equal(nextJourneyStop(stops, 0, -1), undefined);
   assert.deepEqual(journeyStops([], 0, 1000), [0]);
+});
+
+test('mobile wish stops keep whole cards clear of the sound control and bottom progress', () => {
+  // Actual 390px layout: the old halfway stop at 5144 cut the top off card two.
+  const chapterTop = 4523;
+  const cards = [{ top: 4764, bottom: 5049 }, { top: 5072, bottom: 5357 }, { top: 5380, bottom: 5665 }];
+  const stops = readingStops(cards, chapterTop, 844, 72, 80);
+  assert.deepEqual(stops, [4950.5]);
+  const target = Math.round(stops[0]);
+  assert.ok(cards[1].top - target >= 72);
+  assert.ok(cards[2].bottom - target <= 844 - 80);
+  const merged = journeyStops([0, 844, 1991, 2835, 3679, 4523, 5765], 844, 6609, stops);
+  assert.ok(merged.includes(target));
+  assert.ok(!merged.includes(5144));
+  for (const height of [568, 667, 740, 844, 932]) {
+    const positions = [chapterTop, ...readingStops(cards, chapterTop, height, 72, 80)];
+    for (const card of cards) assert.ok(positions.some(y => card.top >= y + 72 - 1 && card.bottom <= y + height - 80 + 1), `${height}: ${card.top}`);
+  }
+});
+
+test('reading stops preserve desktop rows and cover letters taller than the viewport', () => {
+  assert.deepEqual(readingStops([{ top: 200, bottom: 530 }, { top: 200, bottom: 530 }, { top: 200, bottom: 530 }], 0, 900, 72, 80), []);
+  const stops = readingStops([{ top: 1300, bottom: 2900 }], 900, 700, 72, 80);
+  assert.equal(stops[0], 1228);
+  assert.equal(stops[stops.length - 1], 2280);
+  for (let i = 1; i < stops.length; i++) assert.ok(stops[i] - stops[i - 1] <= 700 - 72 - 80);
+  assert.deepEqual(readingStops([], 0, 100, 72, 80), []);
 });
 
 test('the lifetime counter honors the configured timezone, carry boundaries, and future dates', () => {

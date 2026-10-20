@@ -44,10 +44,10 @@ export function BirthdayStory() {
     {entered && <><a href="#main" className="skip-link">{CONFIG.labels.skip}</a><motion.div className="reading-progress" style={{ scaleX: progress }} aria-hidden="true" /></>}
     <main ref={main} id="main" tabIndex={-1} inert={!entered} aria-hidden={!entered} className={entered ? 'experience-main' : 'experience-main story-awaiting'}>
       <StoryChapter index={0}><StoryHero entered={entered} /></StoryChapter>
-      <StoryChapter index={1}><RewindBento /></StoryChapter>
+      <StoryChapter index={1} reading><RewindBento /></StoryChapter>
       <MemoryLane />
-      <StoryChapter index={5}><SecretWishes /></StoryChapter>
-      <StoryChapter index={6}><WishCake /></StoryChapter>
+      <StoryChapter index={5} reading><SecretWishes /></StoryChapter>
+      <StoryChapter index={6} reading><WishCake /></StoryChapter>
     </main>
     <div className="quiet-controls experience-controls">
       <button type="button" onClick={toggleSound} aria-label={playing ? CONFIG.labels.soundOff : CONFIG.labels.soundOn} aria-pressed={playing} title={playing ? CONFIG.labels.soundOff : CONFIG.labels.soundOn}>{playing ? <Music2 size={16} /> : <VolumeX size={16} />}</button>

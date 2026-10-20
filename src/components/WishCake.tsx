@@ -72,6 +72,6 @@ export function WishCake() {
         {String(CONFIG.person.age).split('').map((digit, i) => <NumberCandle key={i} digit={digit} blown={blown} />)}
       </button>
     </motion.div>
-    <AnimatePresence>{blown && <motion.div className="wish-letter-reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : 0.45, duration: 0.65 }}><span className="sr-only" role="status">{CONFIG.cake.status}</span><TypewriterWish /></motion.div>}</AnimatePresence>
+    <AnimatePresence>{blown && <motion.div className="wish-letter-reveal" data-reading-group="letter" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : 0.45, duration: 0.65 }}><span className="sr-only" role="status">{CONFIG.cake.status}</span><TypewriterWish /></motion.div>}</AnimatePresence>
   </section>;
 }

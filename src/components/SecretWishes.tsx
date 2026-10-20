@@ -37,7 +37,7 @@ export function SecretWishes() {
       setCelebrating(true);
     }
   };
-  return <section ref={section} id="wishes" className="exp-section secret-section" aria-labelledby="secret-title"><div className="exp-section-heading"><h2 id="secret-title">{CONFIG.secrets.title}<br /><em>{CONFIG.secrets.emphasis}</em></h2><p>{CONFIG.secrets.description}</p></div><div className="secret-grid">{CONFIG.secrets.cards.map((card, index) => <Secret key={index} card={card} index={index} flipped={flipped[index]} onToggle={() => toggle(index)} />)}</div>
+  return <section ref={section} id="wishes" className="exp-section secret-section" aria-labelledby="secret-title"><div className="exp-section-heading"><h2 id="secret-title">{CONFIG.secrets.title}<br /><em>{CONFIG.secrets.emphasis}</em></h2><p>{CONFIG.secrets.description}</p></div><div className="secret-grid" data-reading-group="wishes">{CONFIG.secrets.cards.map((card, index) => <Secret key={index} card={card} index={index} flipped={flipped[index]} onToggle={() => toggle(index)} />)}</div>
     {celebrating && <><span className="sr-only" role="status">{CONFIG.secrets.completeStatus}</span><WishButterflies onComplete={finish} /></>}
   </section>;
 }

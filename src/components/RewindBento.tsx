@@ -129,7 +129,7 @@ export const RewindBento: React.FC<RewindBentoProps> = ({ isActive, onScrollNext
   return (
     <section className="rewind-bento-section" id="rewind" ref={sectionRef}>
       <div className="bento-heading"><h2>{CONFIG.bento.title}<br />{CONFIG.bento.titleSecond} <em>{CONFIG.bento.titleEmphasis}</em></h2><p>{CONFIG.bento.description}</p></div>
-      <div className={`rewind-bento-grid ${isInView ? 'bento-reveal' : ''}`}>
+      <div className={`rewind-bento-grid ${isInView ? 'bento-reveal' : ''}`} data-reading-group="bento">
         {/* Item 0: Aquarium Photo */}
         <div className="rewind-bento-item rewind-item-0 has-photo">
           <img src={CONFIG.bento.aquarium} alt={CONFIG.bento.aquariumAlt} />

@@ -3,15 +3,15 @@ import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-mot
 import { ArrowDown, Sparkle } from 'lucide-react';
 import { CONFIG } from '../config';
 import { usePresentationMotion } from '../context/MotionPreference';
-import { journeyStops, nextJourneyStop } from '../lib/journey';
+import { journeyStops, nextJourneyStop, readingStops } from '../lib/journey';
 
-export function StoryChapter({ index, children }: { index: number; children: ReactNode }) {
+export function StoryChapter({ index, children, reading = false }: { index: number; children: ReactNode; reading?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { reduced } = usePresentationMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, .45, .55, 1], [105, 0, 0, -105]);
   const scale = useTransform(scrollYProgress, [0, .45, .55, 1], [.94, 1, 1, .96]);
-  return <div ref={ref} className="story-chapter" data-chapter={index}>
+  return <div ref={ref} className="story-chapter" data-chapter={index} data-reading-chapter={reading || undefined}>
     <motion.div className="chapter-content" style={reduced ? undefined : { y, scale }}>{children}</motion.div>
   </div>;
 }
@@ -27,12 +27,42 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
     let accumulated = 0;
     let previousDirection = 0;
     let touch: { x: number; y: number } | null = null;
-    const stop = () => { cancelAnimationFrame(frame); busy = false; latched = false; accumulated = 0; };
-    const go = (direction: number) => {
+    let destination: number | null = null;
+    let viewportWidth = window.innerWidth;
+    // offsetTop ignores the decorative entrance/parallax transforms.
+    const layoutTop = (element: HTMLElement) => {
+      let top = 0;
+      for (let current: HTMLElement | null = element; current; current = current.offsetParent as HTMLElement | null) top += current.offsetTop;
+      return top;
+    };
+    const measureStops = () => {
       const chapters = [...(main.current?.querySelectorAll<HTMLElement>('[data-chapter]') ?? [])];
-      const stops = journeyStops(chapters.map(chapter => chapter.getBoundingClientRect().top + window.scrollY), window.innerHeight, document.documentElement.scrollHeight);
+      const viewport = window.visualViewport?.height ?? window.innerHeight;
+      const viewportTop = window.visualViewport?.offsetTop ?? 0;
+      const controls = document.querySelector('.experience-controls')?.getBoundingClientRect();
+      const progress = document.querySelector('.journey-progress')?.getBoundingClientRect();
+      const topInset = Math.max(24, (controls?.bottom ?? viewportTop + 48) - viewportTop + 16);
+      const bottomInset = Math.max(24, viewportTop + viewport - (progress?.top ?? viewportTop + viewport - 48) + 16);
+      const landmarks = window.matchMedia('(max-width: 768px)').matches ? chapters.flatMap(chapter => {
+        const group = chapter.querySelector<HTMLElement>('[data-reading-group]');
+        if (!group) return [];
+        const items = [...group.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.matches('.sr-only, [hidden], [aria-hidden="true"]'));
+        return readingStops(items.map(item => ({ top: layoutTop(item), bottom: layoutTop(item) + item.offsetHeight })), layoutTop(chapter), viewport, topInset, bottomInset);
+      }) : [];
+      return journeyStops(chapters.map(layoutTop), viewport, document.documentElement.scrollHeight, landmarks);
+    };
+    const stop = () => { cancelAnimationFrame(frame); busy = false; destination = null; latched = false; accumulated = 0; };
+    const retarget = () => {
+      if (window.innerWidth !== viewportWidth) { viewportWidth = window.innerWidth; stop(); return; }
+      if (destination === null) return;
+      const previousTarget = destination;
+      destination = measureStops().reduce((nearest, position) => Math.abs(position - previousTarget) < Math.abs(nearest - previousTarget) ? position : nearest);
+    };
+    const go = (direction: number) => {
+      const stops = measureStops();
       const target = nextJourneyStop(stops, window.scrollY, direction);
       if (target === undefined) return;
+      destination = target;
       const from = window.scrollY;
       const began = performance.now();
       busy = true;
@@ -40,9 +70,9 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
       const tick = (now: number) => {
         const t = Math.min(1, (now - began) / Math.max(200, CONFIG.motion.chapterScrollMs));
         const eased = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
-        window.scrollTo({ top: from + (target - from) * eased, behavior: 'instant' });
+        window.scrollTo({ top: from + ((destination ?? target) - from) * eased, behavior: 'instant' });
         if (t < 1) frame = requestAnimationFrame(tick);
-        else busy = false;
+        else { busy = false; destination = null; }
       };
       frame = requestAnimationFrame(tick);
     };
@@ -89,14 +119,19 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
     window.addEventListener('wheel', wheel, { passive: false });
     window.addEventListener('keydown', key);
     window.addEventListener('pointerdown', stop);
-    window.addEventListener('resize', stop);
+    window.addEventListener('resize', retarget);
+    window.visualViewport?.addEventListener('resize', retarget);
+    const layoutObserver = new ResizeObserver(() => { if (busy) retarget(); });
+    if (main.current) layoutObserver.observe(main.current);
     window.addEventListener('touchstart', touchStart, { passive: true });
     window.addEventListener('touchmove', touchMove, { passive: false });
     window.addEventListener('touchend', touchEnd);
     window.addEventListener('touchcancel', touchCancel);
     return () => {
       stop(); document.documentElement.classList.remove('has-chapter-scroll');
-      window.removeEventListener('wheel', wheel); window.removeEventListener('keydown', key); window.removeEventListener('pointerdown', stop); window.removeEventListener('resize', stop);
+      window.removeEventListener('wheel', wheel); window.removeEventListener('keydown', key); window.removeEventListener('pointerdown', stop); window.removeEventListener('resize', retarget);
+      window.visualViewport?.removeEventListener('resize', retarget);
+      layoutObserver.disconnect();
       window.removeEventListener('touchstart', touchStart); window.removeEventListener('touchmove', touchMove); window.removeEventListener('touchend', touchEnd); window.removeEventListener('touchcancel', touchCancel);
     };
   }, [enabled, main, reduced]);

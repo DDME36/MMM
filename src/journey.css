@@ -92,6 +92,9 @@ html.has-chapter-scroll .experience-main { touch-action: pan-x pinch-zoom; }
 @media (max-width: 768px) {
   html { scroll-snap-type: y proximity; }
   .story-chapter { scroll-snap-align: start; scroll-snap-stop: always; }
+  /* Keep interactive reading panels steady at their measured stops. Their own
+     reveals, card flips, particles, and continuous scene colors still animate. */
+  .story-chapter[data-reading-chapter] > .chapter-content { transform: none !important; }
   .journey-progress { left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); width: auto; min-width: 175px; padding: 9px 13px 7px; border: 1px solid #ffffff66; background: #fffdf7c9; backdrop-filter: blur(12px); border-radius: 12px; }
   .journey-chapter-name { flex-direction: row; align-items: center; gap: 9px; font-size: 8px; }
   .journey-chapter-name > span:first-child { font-size: 10px; }
