@@ -47,8 +47,8 @@ html.has-chapter-scroll .experience-main { touch-action: pan-x pinch-zoom; }
 .memory-scene .lane-photo > figcaption { margin-top: 20px; }
 
 /* Apple Music-inspired miniature player. The existing bento grid cell is unchanged. */
-.birthday-experience .rewind-item-5 { container-type: size; overflow: hidden; }
-.bento-player { position: absolute; inset: 0; color: #fff8f4; background: var(--player-tint); text-align: left; isolation: isolate; overflow: hidden; border-radius: inherit; }
+.birthday-experience .rewind-item-5 { container-type: size; overflow: clip; }
+.bento-player { position: absolute; inset: 0; color: #fff8f4; background: var(--player-tint); text-align: left; isolation: isolate; overflow: clip; border-radius: inherit; }
 .player-backdrop { position: absolute; inset: -20% !important; width: 140% !important; height: 140% !important; object-fit: cover; filter: blur(23px) saturate(.8); opacity: .4; z-index: -2; }
 .bento-player::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent, var(--player-tint) 90%); z-index: -1; }
 .player-content { display: grid; grid-template-rows: 12px minmax(0,1fr) auto 24px 35px 13px; gap: 7px; padding: 14px 18px 12px; height: 100%; position: relative; }
