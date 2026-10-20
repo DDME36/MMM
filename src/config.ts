@@ -61,7 +61,7 @@ export const CONFIG = {
     portrait: '/assets/images/mimiw.png', portraitAlt: 'มิมิว',
     nameWords: ['MIMIW', 'PHROM', 'MIMIW'], nameGradient: ['#f26500', '#B56BFF', '#5bb6ff'],
     loveGradients: [['#973BED', '#007CFF'], ['#FFC800', '#FF00FF'], ['#00E0ED', '#00DA72'], ['#FF6B6B', '#FFE66D']],
-    triangleGradient: ['#ffbf48', '#be4a1d'],
+    orbGradient: ['#ffbf48', '#be4a1d'],
     messages: [{ short: 'ทรย', full: 'ทำไรอยู่' }, { short: 'นร', full: 'น่ารัก' }, { short: 'คถ', full: 'คิดถึง' }, { short: 'ดม', full: 'โดม' }],
     ageUnit: 'ปี', musicLabel: 'Music', songTitle: 'คุณนายตื่นสาย', album: '/assets/images/music album.jpg',
     songSubtitle: 'TEMI Feat. KiRANA', playerTint: '#542732',

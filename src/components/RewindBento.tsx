@@ -268,26 +268,26 @@ export const RewindBento: React.FC<RewindBentoProps> = ({ isActive, onScrollNext
           </div>
         </div>
 
-        {/* Item 7: Geometric Triangle Loader (100% Native SVG Mask on iOS) */}
+        {/* Rounded geometry keeps its shape even when Safari skips mask filters. */}
         <div className="rewind-bento-item rewind-item-7">
           <div className="loader">
-            <svg viewBox="0 0 100 100" className="loader-svg">
+            <svg viewBox="0 0 100 100" className="loader-svg" aria-hidden="true">
               <defs>
-                <linearGradient id="triangleGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="30%" stopColor={CONFIG.bento.triangleGradient[0]} />
-                  <stop offset="70%" stopColor={CONFIG.bento.triangleGradient[1]} />
+                <linearGradient id="birthdayOrbGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={CONFIG.bento.orbGradient[0]} />
+                  <stop offset="65%" stopColor={CONFIG.bento.orbGradient[1]} />
+                  <stop offset="100%" stopColor={CONFIG.bento.orbGradient[1]} stopOpacity=".6" />
                 </linearGradient>
-                <mask id="clipping">
-                  <polygon points="0,0 100,0 100,100 0,100" fill="black" />
-                  <polygon points="25,25 75,25 50,75" fill="white" />
-                  <polygon points="50,25 75,75 25,75" fill="white" />
-                  <polygon points="35,35 65,35 50,65" fill="white" />
-                  <polygon points="35,35 65,35 50,65" fill="white" />
-                  <polygon points="35,35 65,35 50,65" fill="white" />
-                  <polygon points="35,35 65,35 50,65" fill="white" />
-                </mask>
+                <radialGradient id="birthdayOrbLight" cx="38%" cy="22%" r="85%">
+                  <stop offset="0%" stopColor="#fff4df" stopOpacity=".28" />
+                  <stop offset="65%" stopColor="#fff4df" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#fff4df" stopOpacity=".12" />
+                </radialGradient>
               </defs>
-              <rect width="100" height="100" fill="url(#triangleGrad)" mask="url(#clipping)" />
+              <g className="orb-core">
+                <path fill="url(#birthdayOrbGradient)" d="M50 25 C62 25 77 43 77 55 C77 69 62 79 50 79 C38 79 23 69 23 55 C23 43 38 25 50 25 Z" />
+                <path fill="url(#birthdayOrbLight)" d="M50 25 C62 25 77 43 77 55 C77 69 62 79 50 79 C38 79 23 69 23 55 C23 43 38 25 50 25 Z" />
+              </g>
             </svg>
           </div>
         </div>

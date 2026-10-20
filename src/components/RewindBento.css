@@ -496,7 +496,7 @@
   87.5%, 100% { transform: rotate(1080deg); }
 }
 
-/* Item 7: Geometric Triangle Loader (100% Native SVG Mask on iOS) */
+/* Item 7: Luminous orb with a native rounded silhouette. */
 .rewind-item-7 {
   grid-column: 2;
   grid-row: 4;
@@ -567,100 +567,20 @@
   border-radius: 50%;
 }
 
-.loader-svg #clipping {
-  filter: contrast(15);
-  -webkit-filter: contrast(15);
-  -webkit-animation: roundness calc(var(--time-animation) / 2) linear infinite;
-  animation: roundness calc(var(--time-animation) / 2) linear infinite;
+/* A curved path supplies the silhouette directly; no blur/contrast mask needed. */
+.orb-core {
+  transform-box: view-box;
+  transform-origin: 50px 52px;
+  animation: orb-breathe 4.8s ease-in-out infinite;
 }
-
-.loader-svg #clipping polygon {
-  filter: blur(7px);
-  -webkit-filter: blur(7px);
-  transform-box: fill-box;
+@keyframes orb-breathe {
+  0%, 100% { transform: translateY(0) rotate(-7deg) scale(1, 1); }
+  35% { transform: translateY(-3px) rotate(16deg) scale(1.06, .94); }
+  70% { transform: translateY(2px) rotate(-13deg) scale(.96, 1.04); }
 }
-
-.loader-svg #clipping polygon:nth-child(1) {
-  -webkit-transform-origin: 75% 25%;
-  transform-origin: 75% 25%;
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-
-.loader-svg #clipping polygon:nth-child(2) {
-  -webkit-transform-origin: 50% 50%;
-  transform-origin: 50% 50%;
-  -webkit-animation: rotation var(--time-animation) linear infinite reverse;
-  animation: rotation var(--time-animation) linear infinite reverse;
-}
-
-.loader-svg #clipping polygon:nth-child(3) {
-  -webkit-transform-origin: 50% 60%;
-  transform-origin: 50% 60%;
-  -webkit-animation: rotation var(--time-animation) linear infinite;
-  animation: rotation var(--time-animation) linear infinite;
-  -webkit-animation-delay: calc(var(--time-animation) / -3);
-  animation-delay: calc(var(--time-animation) / -3);
-}
-
-.loader-svg #clipping polygon:nth-child(4) {
-  -webkit-transform-origin: 40% 40%;
-  transform-origin: 40% 40%;
-  -webkit-animation: rotation var(--time-animation) linear infinite reverse;
-  animation: rotation var(--time-animation) linear infinite reverse;
-}
-
-.loader-svg #clipping polygon:nth-child(5) {
-  -webkit-transform-origin: 40% 40%;
-  transform-origin: 40% 40%;
-  -webkit-animation: rotation var(--time-animation) linear infinite reverse;
-  animation: rotation var(--time-animation) linear infinite reverse;
-  -webkit-animation-delay: calc(var(--time-animation) / -2);
-  animation-delay: calc(var(--time-animation) / -2);
-}
-
-.loader-svg #clipping polygon:nth-child(6) {
-  -webkit-transform-origin: 60% 40%;
-  transform-origin: 60% 40%;
-  -webkit-animation: rotation var(--time-animation) linear infinite;
-  animation: rotation var(--time-animation) linear infinite;
-}
-
-.loader-svg #clipping polygon:nth-child(7) {
-  -webkit-transform-origin: 60% 40%;
-  transform-origin: 60% 40%;
-  -webkit-animation: rotation var(--time-animation) linear infinite;
-  animation: rotation var(--time-animation) linear infinite;
-  -webkit-animation-delay: calc(var(--time-animation) / -1.5);
-  animation-delay: calc(var(--time-animation) / -1.5);
-}
-
-@-webkit-keyframes rotation {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes rotation {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@-webkit-keyframes roundness {
-  0% { filter: contrast(15); -webkit-filter: contrast(15); }
-  20% { filter: contrast(3); -webkit-filter: contrast(3); }
-  40% { filter: contrast(3); -webkit-filter: contrast(3); }
-  60% { filter: contrast(15); -webkit-filter: contrast(15); }
-  100% { filter: contrast(15); -webkit-filter: contrast(15); }
-}
-
-@keyframes roundness {
-  0% { filter: contrast(15); }
-  20% { filter: contrast(3); }
-  40% { filter: contrast(3); }
-  60% { filter: contrast(15); }
-  100% { filter: contrast(15); }
-}
-
+.birthday-experience .rewind-bento-grid:not(.bento-reveal) .loader,
+.birthday-experience .rewind-bento-grid:not(.bento-reveal) .orb-core,
+.motion-paused .loader, .motion-paused .orb-core { animation-play-state: paused; }
 @-webkit-keyframes colorize {
   0% { filter: hue-rotate(0deg); -webkit-filter: hue-rotate(0deg); }
   20% { filter: hue-rotate(-30deg); -webkit-filter: hue-rotate(-30deg); }
