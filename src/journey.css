@@ -173,13 +173,15 @@ html[data-motion="reduced"] .player-wave i, html[data-motion="reduced"] .journey
 .hero-photo-placeholder { visibility: hidden; }
 
 /* A small pool of warm light breathes with playback, never while paused. */
-.player-artwork-frame { position: relative; width: 100%; height: 100%; min-height: 0; min-width: 0; border-radius: 8px; isolation: isolate; }
-.player-artwork-glow { position: absolute; inset: -5px; z-index: -1; border-radius: inherit; pointer-events: none; background: linear-gradient(135deg, var(--icing), var(--rose) 55%, var(--flame)); filter: blur(11px); -webkit-filter: blur(11px); opacity: 0; transition: opacity .6s ease; animation: album-light-breathe var(--album-glow-time) ease-in-out infinite paused; }
-.is-playing .player-artwork-glow { opacity: .68; animation-play-state: running; }
-.birthday-experience .player-artwork { position: relative; z-index: 0; }
-@keyframes album-light-breathe { 0%,100% { transform: scale(.98); } 50% { transform: scale(1.07, 1.12); } }
-.rewind-bento-grid:not(.bento-reveal) .player-artwork-glow,
-.motion-paused .player-artwork-glow { animation-play-state: paused; }
+.birthday-experience .player-artwork { transition: box-shadow .6s ease; }
+.birthday-experience .is-playing .player-artwork { animation: album-light-breathe var(--album-glow-time) ease-in-out infinite; }
+@keyframes album-light-breathe {
+  0%,100% { box-shadow: 0 5px 13px #200b1b50, 0 0 7px color-mix(in srgb, var(--icing) 35%, transparent), 0 0 10px color-mix(in srgb, var(--rose) 25%, transparent); }
+  50% { box-shadow: 0 5px 13px #200b1b50, 0 0 14px color-mix(in srgb, var(--icing) 65%, transparent), 0 0 22px color-mix(in srgb, var(--flame) 40%, transparent); }
+}
+.birthday-experience .rewind-bento-grid:not(.bento-reveal) .player-artwork,
+.birthday-experience.motion-paused .player-artwork,
+.motion-paused .birthday-experience .player-artwork { animation-play-state: paused; }
 
 /* One finite light sweep seals the letter only after the text is complete. */
 .exp-birthday-letter { position: relative; isolation: isolate; overflow: hidden; }
