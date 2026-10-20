@@ -30,6 +30,7 @@ export const CONFIG = {
       { label: 'และวันดี ๆ ข้างหน้า', color: '#e9dce3' },
       { label: 'ข้อความจากใจ', color: '#f0dfe0' },
       { label: 'คำอธิษฐานของมิว', color: '#e2e7da' },
+      { label: 'จดหมายถึงมิมิว', color: '#f5e8df' },
     ],
     hint: 'เลื่อนเพื่อไปต่อ',
   },
@@ -62,8 +63,8 @@ export const CONFIG = {
     loveGradients: [['#973BED', '#007CFF'], ['#FFC800', '#FF00FF'], ['#00E0ED', '#00DA72'], ['#FF6B6B', '#FFE66D']],
     triangleGradient: ['#ffbf48', '#be4a1d'],
     messages: [{ short: 'ทรย', full: 'ทำไรอยู่' }, { short: 'นร', full: 'น่ารัก' }, { short: 'คถ', full: 'คิดถึง' }, { short: 'ดม', full: 'โดม' }],
-    ageUnit: 'ปี', musicLabel: 'Music', songTitle: 'เพลงนี้ให้มิว', album: '/assets/images/music album.jpg',
-    songSubtitle: 'a song, just for you', playerTint: '#542732',
+    ageUnit: 'ปี', musicLabel: 'Music', songTitle: 'คุณนายตื่นสาย', album: '/assets/images/music album.jpg',
+    songSubtitle: 'TEMI Feat. KiRANA', playerTint: '#542732',
     note: 'years of being you.', wish: 'ขอให้วัย 25 มีแต่เรื่องดี ๆ เข้ามานะ', scroll: 'เลื่อนลง เพื่อดูภาพความทรงจำ',
   },
   memories: {
@@ -82,7 +83,7 @@ export const CONFIG = {
   secrets: {
     title: 'A few things,', emphasis: 'from the heart.', description: 'มีคำอวยพรซ่อนอยู่ ลองแตะเปิดทีละใบสิ',
     reveal: 'แตะเพื่อเปิด', close: 'แตะเพื่อพับเก็บ',
-    butterflyImage: '/assets/images/wish-butterfly.webp', completeStatus: 'เปิดคำอวยพรครบทุกใบแล้ว',
+    completeStatus: 'เปิดคำอวยพรครบทุกใบแล้ว',
     cards: [
       { title: 'ถึงวันดี ๆ ของมิว', message: 'ขอให้ปีนี้มีแต่เรื่องดี ๆ เข้ามา ได้เจอคนใจดี มีเรื่องให้ยิ้มได้บ่อย ๆ และมีความสุขกับชีวิตในทุกวันนะ' },
       { title: 'ถึงงานใหม่และอนาคต', message: 'ขอให้ได้งานใหม่ดี ๆ ที่เหมาะกับมิว มีเพื่อนร่วมงานที่ดี และมีคนเห็นคุณค่าของความตั้งใจ ขอให้อนาคตมั่นคงและสดใสอย่างที่หวังไว้นะ' },
@@ -92,13 +93,13 @@ export const CONFIG = {
   cake: {
     title: 'Make a little wish.', emphasis: 'This one is yours.',
     prompt: 'อธิษฐานแล้วแตะที่เปลวไฟเพื่อเป่าเทียน', blowAction: 'เป่าเทียนวันเกิด',
-    blown: 'ขอให้คำอธิษฐานของมิวเป็นจริงนะ', dedication: 'ถึง มิมิวคนเก่ง',
+    blown: 'ขอให้คำอธิษฐานเป็นจริงนะ… มีจดหมายถึงมิวด้วยล่ะ', dedication: 'ถึง มิมิวคนเก่ง',
     letterTitle: 'สุขสันต์วันเกิดมิมิว', signoff: 'always cheering for you.',
     mainWish: 'สุขสันต์วันเกิด 25 ปีนะมิมิว\nขอให้วัย 25 เป็นปีที่สดใสและมั่นคงอย่างที่หวังไว้นะ ได้เจอคนใจดี ได้งานใหม่ที่ใช่ในสภาพแวดล้อมที่ดี มีคนเห็นคุณค่าในความตั้งใจของมิว และได้เติบโตไปในแบบที่ตัวเองภูมิใจ\nมิวเป็นคนน่ารักที่ใส่ใจครอบครัวและคนรอบข้างเสมอ ขอให้ทั้งมิวและคุณพ่อคุณแม่สุขภาพแข็งแรง มีเรื่องให้ยิ้มด้วยกันเยอะๆ และขอให้ความรักความหวังดีที่มิวมอบให้คนอื่น กลับมาโอบกอดมิวในทุกๆ วันนะ ไม่ว่าปีนี้จะเจออะไร ก็ขอให้มีกำลังใจดีๆ อยู่ข้างๆ เสมอ มีความสุขมากๆ นะมิว!',
     showAll: 'อ่านข้อความทั้งหมด', status: 'เปิดคำอวยพรวันเกิดแล้ว',
   },
   audio: { ambient: '/assets/audio/ambient-cozy.mp3', song: '/assets/audio/music.mp3', ambientVolume: 0.35, songVolume: 0.8, duckVolume: 0.05 },
   // แอนิเมชันเปิดตลอดตามรูปแบบพรีเซนต์ที่ขอ ปรับจังหวะและจำนวนเอฟเฟกต์ได้ที่นี่
-  motion: { particles: 18, typewriterMs: 24, gateOpenMs: 1050, fireworksMs: 2600, chapterScrollMs: 1150, wheelThreshold: 35, swipeThreshold: 45, butterflyFlightMs: 7200, butterflyFlapMs: 620 },
+  motion: { particles: 18, typewriterMs: 24, gateOpenMs: 1050, fireworksMs: 2600, chapterScrollMs: 1150, wheelThreshold: 35, swipeThreshold: 45, cakeToLetterMs: 1000, wishSparklesMs: 3800 },
   labels: { soundOn: 'เปิดเสียงดนตรี', soundOff: 'ปิดเสียงดนตรี', playSong: 'เล่นเพลง', pauseSong: 'พักเพลง', audioUnavailable: 'เล่นเพลงไม่ได้ ลองเปิดเสียงอีกครั้ง', skip: 'ข้ามไปยังเนื้อหา', songPosition: 'ตำแหน่งเพลง', songVolume: 'ระดับเสียงเพลง', songBack: 'ย้อนเพลง 10 วินาที', songForward: 'ข้ามเพลง 10 วินาที' },
 };

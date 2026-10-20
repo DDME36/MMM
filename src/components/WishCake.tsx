@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { CONFIG } from '../config';
 import { birthdayDate, graphemes } from '../lib/birthday';
@@ -37,30 +37,56 @@ function NumberCandle({ digit, blown }: { digit: string; blown: boolean }) {
   </span>;
 }
 
-export function TypewriterWish() {
+export function TypewriterWish({ ready }: { ready: boolean }) {
   const letters = useMemo(() => graphemes(CONFIG.cake.mainWish), []);
   const [count, setCount] = useState(0);
   const { reduced } = usePresentationMotion();
-  const ref = useRef<HTMLElement>(null);
-  const visible = useInView(ref, { once: true, amount: 0.1 });
   useEffect(() => {
-    if (!visible || reduced) return;
+    if (!ready || reduced) return;
     const timer = window.setInterval(() => setCount(value => { if (value >= letters.length) { window.clearInterval(timer); return value; } return value + 1; }), Math.max(8, CONFIG.motion.typewriterMs));
     return () => window.clearInterval(timer);
-  }, [letters.length, reduced, visible]);
+  }, [letters.length, reduced, ready]);
   const complete = reduced || count >= letters.length;
-  return <motion.article ref={ref} className="exp-birthday-letter" initial={{ opacity: 0, y: reduced ? 0 : 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65 }}>
+  return <motion.article className="exp-birthday-letter" initial={{ opacity: 0, y: reduced ? 0 : 25 }} animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 25 }} transition={{ duration: 0.65 }}>
     <div className="exp-letter-meta"><span>{CONFIG.cake.dedication}</span><span>{birthdayDate()}</span></div>
-    <h3>{CONFIG.cake.letterTitle}<Heart size={22} strokeWidth={1.2} /></h3>
+    <h3 id="birthday-letter-title">{CONFIG.cake.letterTitle}<Heart size={22} strokeWidth={1.2} /></h3>
     <p className="sr-only">{CONFIG.cake.mainWish}</p>
-    <p className={`typed-wish ${complete ? 'is-complete' : ''}`} aria-hidden="true">{complete ? CONFIG.cake.mainWish : letters.slice(0, count).join('')}<span className="typewriter-caret" /></p>
-    {!complete && <button type="button" className="read-whole-wish" onClick={() => setCount(letters.length)}>{CONFIG.cake.showAll}</button>}
+    <div className="typed-wish-layout" aria-hidden="true">
+      <p className="typed-wish typed-wish-measure">{CONFIG.cake.mainWish}</p>
+      <p className={`typed-wish ${complete ? 'is-complete' : ''}`}>{complete ? CONFIG.cake.mainWish : letters.slice(0, count).join('')}<span className="typewriter-caret" /></p>
+    </div>
+    <button type="button" className="read-whole-wish" style={{ visibility: ready && !complete ? 'visible' : 'hidden' }} disabled={!ready || complete} onClick={() => setCount(letters.length)}>{CONFIG.cake.showAll}</button>
     <div className="exp-letter-signoff"><span>{CONFIG.cake.signoff}</span><Heart size={19} fill="currentColor" /></div>
   </motion.article>;
 }
 
-export function WishCake() {
-  const [blown, setBlown] = useState(false);
+export function BirthdayLetter({ ready }: { ready: boolean }) {
+  const section = useRef<HTMLElement>(null);
+  const visible = useInView(section, { amount: .1 });
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    if (!visible || settled || ready) return;
+    let timer = 0;
+    // Also supports a manually reached letter after an interrupted automatic scroll.
+    const check = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const rect = section.current?.getBoundingClientRect();
+        if (rect && rect.top < innerHeight * .3 && rect.bottom > 100) setSettled(true);
+      }, 180);
+    };
+    check(); window.addEventListener('scroll', check, { passive: true });
+    return () => { window.clearTimeout(timer); window.removeEventListener('scroll', check); };
+  }, [visible, settled, ready]);
+  return <section ref={section} id="birthday-letter" tabIndex={-1} className="exp-section birthday-letter-section" aria-labelledby="birthday-letter-title">
+    <div className="wish-letter-reveal" data-reading-group="letter">
+      {(ready || settled) && <span className="sr-only" role="status">{CONFIG.cake.status}</span>}
+      <TypewriterWish ready={ready || settled} />
+    </div>
+  </section>;
+}
+
+export function WishCake({ blown, onBlow }: { blown: boolean; onBlow: () => void }) {
   const { reduced } = usePresentationMotion();
   useEffect(() => { if (blown && !reduced) return birthdayFireworks(); }, [blown, reduced]);
   return <section id="birthday-cake" className="exp-section wish-cake-section" aria-labelledby="cake-title">
@@ -68,10 +94,9 @@ export function WishCake() {
     <motion.div className={`birthday-cake-art ${blown ? 'is-blown' : ''}`} initial={reduced ? false : { y: 35 }} whileInView={{ y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
       <div className="cake-plate" /><div className="cake-bottom-tier" /><div className="cake-top-tier" /><div className="cake-icing" />
       <div className="cake-decoration" aria-hidden="true"><Heart /><Heart /><Heart /></div>
-      <button type="button" className="candle-button" onClick={() => setBlown(true)} disabled={blown} aria-label={CONFIG.cake.blowAction} aria-pressed={blown}>
+      <button type="button" className="candle-button" onClick={onBlow} disabled={blown} aria-label={CONFIG.cake.blowAction} aria-pressed={blown}>
         {String(CONFIG.person.age).split('').map((digit, i) => <NumberCandle key={i} digit={digit} blown={blown} />)}
       </button>
     </motion.div>
-    <AnimatePresence>{blown && <motion.div className="wish-letter-reveal" data-reading-group="letter" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : 0.45, duration: 0.65 }}><span className="sr-only" role="status">{CONFIG.cake.status}</span><TypewriterWish /></motion.div>}</AnimatePresence>
   </section>;
 }

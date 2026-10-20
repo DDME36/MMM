@@ -8,12 +8,15 @@ import { StoryHero } from './StoryHero';
 import { RewindBento } from './RewindBento';
 import { MemoryLane } from './MemoryLane';
 import { SecretWishes } from './SecretWishes';
-import { WishCake } from './WishCake';
+import { BirthdayLetter, WishCake } from './WishCake';
+import { navigateJourney } from '../lib/journey';
 import { FloatingParticles } from './FloatingParticles';
 import { StoryChapter, StoryJourney } from './StoryJourney';
 
 export function BirthdayStory() {
   const [entered, setEntered] = useState(false);
+  const [blown, setBlown] = useState(false);
+  const [letterReady, setLetterReady] = useState(false);
   const main = useRef<HTMLElement>(null);
   const { isAmbientPlaying, isSongPlaying, toggleAmbient, toggleSong, audioError } = useAudio();
   const { scrollYProgress } = useScroll();
@@ -24,6 +27,16 @@ export function BirthdayStory() {
     if (isSongPlaying) { toggleSong(); if (isAmbientPlaying) toggleAmbient(); }
     else toggleAmbient();
   };
+
+  useEffect(() => {
+    if (!blown) return;
+    // Let the smoke and first fireworks register, then travel to the final chapter.
+    const timer = window.setTimeout(() => navigateJourney('birthday-letter', () => {
+      document.getElementById('birthday-letter')?.focus({ preventScroll: true });
+      setLetterReady(true);
+    }), CONFIG.motion.cakeToLetterMs);
+    return () => window.clearTimeout(timer);
+  }, [blown]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -47,7 +60,8 @@ export function BirthdayStory() {
       <StoryChapter index={1} reading><RewindBento /></StoryChapter>
       <MemoryLane />
       <StoryChapter index={5} reading><SecretWishes /></StoryChapter>
-      <StoryChapter index={6} reading><WishCake /></StoryChapter>
+      <StoryChapter index={6} reading><WishCake blown={blown} onBlow={() => setBlown(true)} /></StoryChapter>
+      {blown && <StoryChapter index={7} reading><BirthdayLetter ready={letterReady} /></StoryChapter>}
     </main>
     <div className="quiet-controls experience-controls">
       <button type="button" onClick={toggleSound} aria-label={playing ? CONFIG.labels.soundOff : CONFIG.labels.soundOn} aria-pressed={playing} title={playing ? CONFIG.labels.soundOff : CONFIG.labels.soundOn}>{playing ? <Music2 size={16} /> : <VolumeX size={16} />}</button>

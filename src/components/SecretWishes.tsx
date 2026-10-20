@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { Heart, Sparkle } from 'lucide-react';
 import { CONFIG } from '../config';
 import { usePresentationMotion } from '../context/MotionPreference';
-import { WishButterflies } from './WishButterflies';
+import { WishSparkles } from './WishSparkles';
 
 function Secret({ card, index, flipped, onToggle }: { card: typeof CONFIG.secrets.cards[number]; index: number; flipped: boolean; onToggle: () => void }) {
   const { reduced } = usePresentationMotion();
@@ -24,10 +24,6 @@ export function SecretWishes() {
   const section = useRef<HTMLElement>(null);
   const visible = useInView(section, { amount: .05 });
   const finish = useCallback(() => setCelebrating(false), []);
-  useEffect(() => {
-    const image = new Image();
-    image.src = CONFIG.secrets.butterflyImage;
-  }, []);
   useEffect(() => { if (!visible) finish(); }, [visible, finish]);
   const toggle = (index: number) => {
     const next = flipped.map((value, i) => i === index ? !value : value);
@@ -38,6 +34,6 @@ export function SecretWishes() {
     }
   };
   return <section ref={section} id="wishes" className="exp-section secret-section" aria-labelledby="secret-title"><div className="exp-section-heading"><h2 id="secret-title">{CONFIG.secrets.title}<br /><em>{CONFIG.secrets.emphasis}</em></h2><p>{CONFIG.secrets.description}</p></div><div className="secret-grid" data-reading-group="wishes">{CONFIG.secrets.cards.map((card, index) => <Secret key={index} card={card} index={index} flipped={flipped[index]} onToggle={() => toggle(index)} />)}</div>
-    {celebrating && <><span className="sr-only" role="status">{CONFIG.secrets.completeStatus}</span><WishButterflies onComplete={finish} /></>}
+    {celebrating && <><span className="sr-only" role="status">{CONFIG.secrets.completeStatus}</span><WishSparkles onComplete={finish} /></>}
   </section>;
 }

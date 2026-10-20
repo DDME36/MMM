@@ -2,7 +2,7 @@
 
 Created using the built-in image generation tool for the three wish cards. The original transparent PNG is saved at `public/assets/images/wish-butterfly.png`. The optimized 320-pixel transparent WebP served by the website is `public/assets/images/wish-butterfly.webp` (about 40 KB).
 
-The butterfly uses two clipped halves of the same asset, animated independently for wing beats. Six finite flights appear once when all wish cards are open together, stay near the viewport edges, ignore pointer input, and are removed after their final fade or when the wish section leaves view. Edit the image path in `CONFIG.secrets.butterflyImage` and timing in `CONFIG.motion.butterflyFlightMs` / `butterflyFlapMs`.
+This effect has been retired at the user's request. The site no longer loads the butterfly sprite or runs its flight animation. The original generated assets remain archived here for provenance.
 
 ## Final generation prompt
 

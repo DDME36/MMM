@@ -51,3 +51,11 @@ export function readingStops(items: ReadingItem[], chapterTop: number, viewport:
 export function nextJourneyStop(stops: number[], position: number, direction: number) {
   return direction > 0 ? stops.find(stop => stop > position + 12) : [...stops].reverse().find(stop => stop < position - 12);
 }
+
+export const JOURNEY_NAVIGATE = 'birthday:journey-navigate';
+export interface JourneyNavigation { target: string; onArrive: () => void }
+
+/** Use the same interruptible transition as swiping, including the arrival callback. */
+export function navigateJourney(target: string, onArrive: () => void) {
+  window.dispatchEvent(new CustomEvent<JourneyNavigation>(JOURNEY_NAVIGATE, { detail: { target, onArrive } }));
+}

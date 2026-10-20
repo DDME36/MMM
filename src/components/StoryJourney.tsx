@@ -3,7 +3,7 @@ import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-mot
 import { ArrowDown, Sparkle } from 'lucide-react';
 import { CONFIG } from '../config';
 import { usePresentationMotion } from '../context/MotionPreference';
-import { journeyStops, nextJourneyStop, readingStops } from '../lib/journey';
+import { JOURNEY_NAVIGATE, journeyStops, nextJourneyStop, readingStops, type JourneyNavigation } from '../lib/journey';
 
 export function StoryChapter({ index, children, reading = false }: { index: number; children: ReactNode; reading?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -58,10 +58,8 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
       const previousTarget = destination;
       destination = measureStops().reduce((nearest, position) => Math.abs(position - previousTarget) < Math.abs(nearest - previousTarget) ? position : nearest);
     };
-    const go = (direction: number) => {
-      const stops = measureStops();
-      const target = nextJourneyStop(stops, window.scrollY, direction);
-      if (target === undefined) return;
+    const animateTo = (target: number, onArrive?: () => void) => {
+      cancelAnimationFrame(frame);
       destination = target;
       const from = window.scrollY;
       const began = performance.now();
@@ -72,9 +70,21 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
         const eased = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
         window.scrollTo({ top: from + ((destination ?? target) - from) * eased, behavior: 'instant' });
         if (t < 1) frame = requestAnimationFrame(tick);
-        else { busy = false; destination = null; }
+        else { busy = false; destination = null; onArrive?.(); }
       };
       frame = requestAnimationFrame(tick);
+    };
+    const go = (direction: number) => {
+      const target = nextJourneyStop(measureStops(), window.scrollY, direction);
+      if (target !== undefined) animateTo(target);
+    };
+    const navigate = (event: Event) => {
+      const { target, onArrive } = (event as CustomEvent<JourneyNavigation>).detail;
+      const section = document.getElementById(target);
+      if (!section) return;
+      const chapter = section.closest<HTMLElement>('[data-chapter]') ?? section;
+      const max = Math.max(0, document.documentElement.scrollHeight - (window.visualViewport?.height ?? innerHeight));
+      animateTo(Math.min(max, layoutTop(chapter)), onArrive);
     };
     const isControl = (target: EventTarget | null) => target instanceof Element && !!target.closest('input, textarea, select, [contenteditable="true"], [data-native-scroll]');
     const wheel = (event: WheelEvent) => {
@@ -117,6 +127,7 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
     };
     const touchCancel = () => { touch = null; };
     window.addEventListener('wheel', wheel, { passive: false });
+    window.addEventListener(JOURNEY_NAVIGATE, navigate);
     window.addEventListener('keydown', key);
     window.addEventListener('pointerdown', stop);
     window.addEventListener('resize', retarget);
@@ -129,6 +140,7 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
     window.addEventListener('touchcancel', touchCancel);
     return () => {
       stop(); document.documentElement.classList.remove('has-chapter-scroll');
+      window.removeEventListener(JOURNEY_NAVIGATE, navigate);
       window.removeEventListener('wheel', wheel); window.removeEventListener('keydown', key); window.removeEventListener('pointerdown', stop); window.removeEventListener('resize', retarget);
       window.visualViewport?.removeEventListener('resize', retarget);
       layoutObserver.disconnect();
@@ -156,7 +168,7 @@ export function StoryJourney({ main, entered }: { main: RefObject<HTMLElement | 
     const index = starts.reduce((found, start, index) => start <= y + innerHeight * .4 ? index : found, 0);
     setChapter(Math.max(0, Math.min(CONFIG.journey.chapters.length - 1, index)));
   });
-  const color = useTransform(scrollY, starts, CONFIG.journey.chapters.map(item => item.color));
+  const color = useTransform(scrollY, starts, CONFIG.journey.chapters.slice(0, starts.length).map(item => item.color));
   const drift = useTransform(scrollYProgress, [0, 1], ['15vh', '-65vh']);
   const starY = useTransform(scrollYProgress, [0, 1], ['10vh', '82vh']);
   const starRotate = useTransform(scrollYProgress, [0, 1], [-30, 150]);
