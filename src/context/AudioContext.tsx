@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
 import { CONFIG } from '../config';
+import { createAudioPlayback } from '../lib/audio-playback';
 
 interface AudioContextType {
   audioAllowed: boolean | null;
@@ -8,6 +9,7 @@ interface AudioContextType {
   toggleAmbient: () => void;
   isSongPlaying: boolean;
   toggleSong: () => void;
+  toggleSound: () => void;
   startExperience: () => void;
   audioError: string | null;
   songTime: number;
@@ -30,6 +32,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const ambientRef = useRef<HTMLAudioElement | null>(null);
   const songRef = useRef<HTMLAudioElement | null>(null);
+  const playbackRef = useRef<ReturnType<typeof createAudioPlayback> | null>(null);
 
   useEffect(() => {
     // Initialize audio elements
@@ -37,9 +40,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     ambientRef.current.preload = 'none';
     ambientRef.current.loop = true;
     ambientRef.current.volume = CONFIG.audio.ambientVolume;
-    ambientRef.current.onplay = () => setIsAmbientPlaying(true);
-    ambientRef.current.onpause = () => setIsAmbientPlaying(false);
-    ambientRef.current.onerror = () => { setIsAmbientPlaying(false); setAudioError(CONFIG.labels.audioUnavailable); };
 
     songRef.current = new Audio(CONFIG.audio.song);
     songRef.current.preload = 'metadata';
@@ -50,70 +50,43 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const duration = songRef.current?.duration ?? 0;
       setSongDuration(Number.isFinite(duration) ? duration : 0);
     };
-    const restoreAmbient = () => { if (ambientRef.current) ambientRef.current.volume = CONFIG.audio.ambientVolume; };
-    songRef.current.onpause = () => { setIsSongPlaying(false); restoreAmbient(); };
-    songRef.current.onerror = () => { setIsSongPlaying(false); restoreAmbient(); setAudioError(CONFIG.labels.audioUnavailable); };
-
-    songRef.current.onended = () => {
-      setIsSongPlaying(false);
-      restoreAmbient();
-    };
+    playbackRef.current = createAudioPlayback(ambientRef.current, songRef.current,
+      (ambient, song) => { setIsAmbientPlaying(ambient); setIsSongPlaying(song); },
+      () => setAudioError(CONFIG.labels.audioUnavailable));
 
     return () => {
-      if (ambientRef.current) { ambientRef.current.onplay = null; ambientRef.current.onpause = null; ambientRef.current.onerror = null; }
-      if (songRef.current) { songRef.current.onpause = null; songRef.current.onended = null; songRef.current.onerror = null; songRef.current.ontimeupdate = null; songRef.current.ondurationchange = null; }
-      ambientRef.current?.pause();
-      songRef.current?.pause();
+      playbackRef.current?.dispose();
+      playbackRef.current = null;
+      if (songRef.current) { songRef.current.ontimeupdate = null; songRef.current.ondurationchange = null; }
     };
   }, []);
 
   const setAudioAllowed = (allowed: boolean) => {
     setAudioError(null);
     setAudioAllowedState(allowed);
-    if (allowed) {
-      ambientRef.current?.play().catch(() => { setIsAmbientPlaying(false); setAudioError(CONFIG.labels.audioUnavailable); });
-    } else {
-      setIsAmbientPlaying(false);
-      ambientRef.current?.pause();
-    }
+    playbackRef.current?.setAllowed(allowed);
   };
 
   const startExperience = () => {
-    if (audioAllowed && ambientRef.current && ambientRef.current.paused) {
-      ambientRef.current.play().catch(() => setIsAmbientPlaying(false));
-    }
+    playbackRef.current?.startExperience();
   };
 
   const toggleAmbient = () => {
     setAudioError(null);
-    if (!ambientRef.current) return;
-    if (isAmbientPlaying) {
-      ambientRef.current.pause();
-      setIsAmbientPlaying(false);
-    } else {
-      setAudioAllowedState(true);
-      ambientRef.current.volume = songRef.current && !songRef.current.paused ? CONFIG.audio.duckVolume : CONFIG.audio.ambientVolume;
-      ambientRef.current.play().catch(() => { setIsAmbientPlaying(false); setAudioError(CONFIG.labels.audioUnavailable); });
-    }
+    setAudioAllowedState(!isAmbientPlaying);
+    playbackRef.current?.toggleAmbient();
   };
 
   const toggleSong = () => {
     setAudioError(null);
-    if (!songRef.current) return;
-    if (isSongPlaying) {
-      songRef.current.pause();
-      setIsSongPlaying(false);
-      if (ambientRef.current && isAmbientPlaying) {
-        ambientRef.current.volume = CONFIG.audio.ambientVolume;
-      }
-    } else {
-      if (ambientRef.current) {
-        ambientRef.current.volume = CONFIG.audio.duckVolume;
-      }
-      songRef.current.play()
-        .then(() => setIsSongPlaying(true))
-        .catch(() => { setIsSongPlaying(false); setAudioError(CONFIG.labels.audioUnavailable); if (ambientRef.current) ambientRef.current.volume = CONFIG.audio.ambientVolume; });
-    }
+    setAudioAllowedState(true);
+    playbackRef.current?.toggleSong();
+  };
+
+  const toggleSound = () => {
+    setAudioError(null);
+    setAudioAllowedState(!(isAmbientPlaying || isSongPlaying));
+    playbackRef.current?.toggleSound();
   };
 
   const seekSong = (seconds: number) => {
@@ -138,6 +111,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         toggleAmbient,
         isSongPlaying,
         toggleSong,
+        toggleSound,
         startExperience,
         audioError,
         songTime, songDuration, songVolume, seekSong, setSongVolume,

@@ -35,6 +35,8 @@ These were researched as useful references for future additions. This change use
 
 ## Validation
 
+Audio playback is exclusive: starting the bento song pauses ambient playback, and pausing/ending it restores the background only if previously enabled. Global mute pauses both tracks without triggering restoration. A shared playback controller guards late play() completions, rejected requests and queued native pause events. Four regression tests exercise switching, resuming from the existing position, muted-background behavior, failures, pending requests and rapid toggles.
+
 The ending now has two separate chapters. Blowing out the cake immediately extinguishes the flames, starts fireworks, waits `CONFIG.motion.cakeToLetterMs`, and uses the shared interruptible chapter transition to reach the final letter. Typing begins on arrival; a scroll-settled visibility fallback supports manual navigation after interruption. Full text reserves its layout before typing so chapter measurements remain stable. The final chapter is added only after the candle is blown, and its color is configured in the eighth journey entry.
 
 The wish-card butterfly overlay was removed. `WishSparkles` adapts the finite Stars example from [Magic UI Confetti](https://magicui.design/docs/components/confetti) using the existing canvas-confetti dependency, a scoped pointer-transparent canvas, the configured rose/cream/gold palette, and two small bursts. It runs once when all three cards are open, resets on leaving the section, and cleans up after `CONFIG.motion.wishSparklesMs`. No additional dependency is required. Magic UI source: https://github.com/magicuidesign/magicui (MIT).

@@ -18,15 +18,11 @@ export function BirthdayStory() {
   const [blown, setBlown] = useState(false);
   const [letterReady, setLetterReady] = useState(false);
   const main = useRef<HTMLElement>(null);
-  const { isAmbientPlaying, isSongPlaying, toggleAmbient, toggleSong, audioError } = useAudio();
+  const { isAmbientPlaying, isSongPlaying, toggleSound, audioError } = useAudio();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
   const enter = useCallback(() => { window.scrollTo({ top: 0, behavior: 'instant' }); setEntered(true); }, []);
   const playing = isAmbientPlaying || isSongPlaying;
-  const toggleSound = () => {
-    if (isSongPlaying) { toggleSong(); if (isAmbientPlaying) toggleAmbient(); }
-    else toggleAmbient();
-  };
 
   useEffect(() => {
     if (!blown) return;

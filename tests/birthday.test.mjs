@@ -11,6 +11,107 @@ const { livedTime, graphemes } = await server.ssrLoadModule('/src/lib/birthday.t
 const { CONFIG } = await server.ssrLoadModule('/src/config.ts');
 const { default: App } = await server.ssrLoadModule('/src/App.tsx');
 const { journeyStops, nextJourneyStop, readingStops } = await server.ssrLoadModule('/src/lib/journey.ts');
+const { createAudioPlayback } = await server.ssrLoadModule('/src/lib/audio-playback.ts');
+
+class FakeAudio extends EventTarget {
+  paused = true;
+  currentTime = 42;
+  pending = [];
+  play() {
+    return new Promise((resolve, reject) => this.pending.push({ resolve, reject }));
+  }
+  resolvePlay() {
+    this.paused = false;
+    this.dispatchEvent(new Event('play'));
+    this.pending.shift().resolve();
+  }
+  pause() {
+    if (this.paused) return;
+    this.paused = true;
+    this.dispatchEvent(new Event('pause'));
+  }
+  end() { this.paused = true; this.dispatchEvent(new Event('ended')); }
+}
+
+function audioFixture() {
+  const ambient = new FakeAudio();
+  const song = new FakeAudio();
+  let errors = 0;
+  const states = [];
+  const playback = createAudioPlayback(ambient, song, (a, s) => {
+    assert.ok(ambient.paused || song.paused, 'both tracks must never play together');
+    states.push([a, s]);
+  }, () => errors++);
+  return { ambient, song, playback, states, get errors() { return errors; } };
+}
+
+test('bento playback pauses the background and resumes it from the same position on pause/end', async () => {
+  const { ambient, song, playback, states } = audioFixture();
+  playback.setAllowed(true); ambient.resolvePlay();
+  playback.toggleSong();
+  assert.equal(ambient.paused, true);
+  song.resolvePlay();
+  assert.deepEqual(states.at(-1), [false, true]);
+  playback.toggleSong();
+  assert.equal(song.paused, true);
+  ambient.resolvePlay();
+  assert.equal(ambient.currentTime, 42);
+  assert.deepEqual(states.at(-1), [true, false]);
+  playback.toggleSong(); song.resolvePlay(); song.end(); ambient.resolvePlay();
+  assert.deepEqual(states.at(-1), [true, false]);
+  await Promise.resolve(); playback.dispose();
+});
+
+test('global mute cancels pending song playback without restoring background music', async () => {
+  const { ambient, song, playback, states } = audioFixture();
+  playback.setAllowed(true); ambient.resolvePlay();
+  playback.toggleSong(); playback.toggleSound();
+  song.resolvePlay();
+  await Promise.resolve();
+  assert.equal(ambient.paused, true);
+  assert.equal(song.paused, true);
+  assert.deepEqual(states.at(-1), [false, false]);
+  assert.equal(ambient.pending.length, 0);
+  playback.toggleSound(); ambient.resolvePlay();
+  assert.deepEqual(states.at(-1), [true, false]);
+  playback.dispose();
+});
+
+test('a song started while background is off stays quiet afterwards and failures restore only enabled background', async () => {
+  const fixture = audioFixture();
+  const { ambient, song, playback } = fixture;
+  playback.toggleSong(); song.resolvePlay(); song.end();
+  assert.equal(ambient.pending.length, 0);
+  playback.setAllowed(true); ambient.resolvePlay();
+  playback.toggleSong(); song.pending.shift().reject(new Error('cannot play'));
+  await Promise.resolve(); await Promise.resolve();
+  assert.equal(fixture.errors, 1);
+  ambient.resolvePlay();
+  assert.equal(ambient.paused, false);
+  assert.equal(song.paused, true);
+  playback.dispose();
+});
+
+test('rapid track switches ignore stale playback completions and queued pause events', async () => {
+  const fixture = audioFixture();
+  const { ambient, song, playback } = fixture;
+  playback.setAllowed(true);
+  playback.toggleSong(); song.resolvePlay();
+  ambient.resolvePlay();
+  await Promise.resolve();
+  assert.equal(ambient.paused, true);
+  assert.equal(song.paused, false);
+  song.dispatchEvent(new Event('pause'));
+  assert.equal(song.paused, false);
+  playback.toggleSong(); playback.toggleSong();
+  ambient.pending.shift().reject(new Error('interrupted'));
+  song.resolvePlay();
+  await Promise.resolve(); await Promise.resolve();
+  assert.equal(fixture.errors, 0);
+  assert.equal(ambient.paused, true);
+  assert.equal(song.paused, false);
+  playback.dispose();
+});
 
 test('chapter scrolling keeps short chapters intact and adds reading stops in tall chapters', () => {
   assert.deepEqual(journeyStops([0, 800, 1600], 800, 2400), [0, 800, 1600]);

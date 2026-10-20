@@ -98,7 +98,7 @@ export const CONFIG = {
     mainWish: 'สุขสันต์วันเกิด 25 ปีนะมิมิว\nขอให้วัย 25 เป็นปีที่สดใสและมั่นคงอย่างที่หวังไว้นะ ได้เจอคนใจดี ได้งานใหม่ที่ใช่ในสภาพแวดล้อมที่ดี มีคนเห็นคุณค่าในความตั้งใจของมิว และได้เติบโตไปในแบบที่ตัวเองภูมิใจ\nมิวเป็นคนน่ารักที่ใส่ใจครอบครัวและคนรอบข้างเสมอ ขอให้ทั้งมิวและคุณพ่อคุณแม่สุขภาพแข็งแรง มีเรื่องให้ยิ้มด้วยกันเยอะๆ และขอให้ความรักความหวังดีที่มิวมอบให้คนอื่น กลับมาโอบกอดมิวในทุกๆ วันนะ ไม่ว่าปีนี้จะเจออะไร ก็ขอให้มีกำลังใจดีๆ อยู่ข้างๆ เสมอ มีความสุขมากๆ นะมิว!',
     showAll: 'อ่านข้อความทั้งหมด', status: 'เปิดคำอวยพรวันเกิดแล้ว',
   },
-  audio: { ambient: '/assets/audio/ambient-cozy.mp3', song: '/assets/audio/music.mp3', ambientVolume: 0.35, songVolume: 0.8, duckVolume: 0.05 },
+  audio: { ambient: '/assets/audio/ambient-cozy.mp3', song: '/assets/audio/music.mp3', ambientVolume: 0.35, songVolume: 0.8 },
   // แอนิเมชันเปิดตลอดตามรูปแบบพรีเซนต์ที่ขอ ปรับจังหวะและจำนวนเอฟเฟกต์ได้ที่นี่
   motion: { particles: 18, typewriterMs: 24, gateOpenMs: 1050, fireworksMs: 2600, chapterScrollMs: 1150, wheelThreshold: 35, swipeThreshold: 45, cakeToLetterMs: 1000, wishSparklesMs: 3800 },
   labels: { soundOn: 'เปิดเสียงดนตรี', soundOff: 'ปิดเสียงดนตรี', playSong: 'เล่นเพลง', pauseSong: 'พักเพลง', audioUnavailable: 'เล่นเพลงไม่ได้ ลองเปิดเสียงอีกครั้ง', skip: 'ข้ามไปยังเนื้อหา', songPosition: 'ตำแหน่งเพลง', songVolume: 'ระดับเสียงเพลง', songBack: 'ย้อนเพลง 10 วินาที', songForward: 'ข้ามเพลง 10 วินาที' },
