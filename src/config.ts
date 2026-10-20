@@ -100,6 +100,6 @@ export const CONFIG = {
   },
   audio: { ambient: '/assets/audio/ambient-cozy.mp3', song: '/assets/audio/music.mp3', ambientVolume: 0.35, songVolume: 0.8 },
   // แอนิเมชันเปิดตลอดตามรูปแบบพรีเซนต์ที่ขอ ปรับจังหวะและจำนวนเอฟเฟกต์ได้ที่นี่
-  motion: { particles: 18, typewriterMs: 24, gateOpenMs: 1050, fireworksMs: 2600, chapterScrollMs: 1150, wheelThreshold: 35, swipeThreshold: 45, cakeToLetterMs: 1000, wishSparklesMs: 3800 },
+  motion: { particles: 18, typewriterMs: 24, gateOpenMs: 1650, photoLiftMs: 700, photoTravelMs: 900, albumGlowMs: 3800, letterLightMs: 2400, fireworksMs: 2600, chapterScrollMs: 1150, wheelThreshold: 35, swipeThreshold: 45, cakeToLetterMs: 1000, wishSparklesMs: 3800 },
   labels: { soundOn: 'เปิดเสียงดนตรี', soundOff: 'ปิดเสียงดนตรี', playSong: 'เล่นเพลง', pauseSong: 'พักเพลง', audioUnavailable: 'เล่นเพลงไม่ได้ ลองเปิดเสียงอีกครั้ง', skip: 'ข้ามไปยังเนื้อหา', songPosition: 'ตำแหน่งเพลง', songVolume: 'ระดับเสียงเพลง', songBack: 'ย้อนเพลง 10 วินาที', songForward: 'ข้ามเพลง 10 วินาที' },
 };

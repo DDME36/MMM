@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion, useScroll, useSpring } from 'framer-motion';
 import { Music2, VolumeX } from 'lucide-react';
 import { CONFIG } from '../config';
 import { useAudio } from '../context/AudioContext';
@@ -47,7 +47,7 @@ export function BirthdayStory() {
     return () => document.removeEventListener('visibilitychange', visibility);
   }, []);
 
-  return <div className="birthday-experience">
+  return <LayoutGroup id="birthday-invitation"><div className="birthday-experience">
     <StoryJourney main={main} entered={entered} />
     <FloatingParticles />
     {entered && <><a href="#main" className="skip-link">{CONFIG.labels.skip}</a><motion.div className="reading-progress" style={{ scaleX: progress }} aria-hidden="true" /></>}
@@ -64,5 +64,5 @@ export function BirthdayStory() {
       {audioError && <span className="audio-error" role="status">{audioError}</span>}
     </div>
     <AnimatePresence onExitComplete={() => main.current?.focus({ preventScroll: true })}>{!entered && <ExperienceGate key="gate" onEnter={enter} />}</AnimatePresence>
-  </div>;
+  </div></LayoutGroup>;
 }

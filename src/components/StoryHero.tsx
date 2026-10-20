@@ -40,8 +40,10 @@ export function StoryHero({ entered }: { entered: boolean }) {
         </motion.h1>
         <motion.div initial={false} animate={{ opacity: entered ? 1 : 0 }} transition={{ delay: 0.55, duration: 0.8 }}><p className="exp-hero-dedication">{CONFIG.hero.dedication}</p><span className="exp-handwritten">{CONFIG.hero.note}</span><TimeCounter active={entered} /></motion.div>
       </motion.div>
-      <motion.div className="exp-hero-portrait" style={reduced ? undefined : { y: imageY }} initial={false} animate={{ opacity: entered ? 1 : 0 }} transition={{ duration: 0.9, delay: 0.2 }}>
-        <figure><span className="paper-tape" aria-hidden="true" /><img src={CONFIG.hero.portrait} alt={CONFIG.hero.portraitAlt} fetchPriority="high" /><figcaption>{CONFIG.hero.photoCaption}<Heart size={15} strokeWidth={1.2} /></figcaption></figure>
+      <motion.div className="exp-hero-portrait" style={reduced ? undefined : { y: imageY }} initial={false} animate={{ opacity: entered ? 1 : 0 }} transition={{ duration: .35 }}>
+        {entered ? <motion.figure layoutId="birthday-photo" style={{ rotate: 6 }} transition={{ layout: { duration: reduced ? 0 : CONFIG.motion.photoTravelMs / 1000, ease: [0.22, 1, 0.36, 1] } }}>
+          <span className="paper-tape" aria-hidden="true" /><img src={CONFIG.hero.portrait} alt={CONFIG.hero.portraitAlt} fetchPriority="high" /><figcaption>{CONFIG.hero.photoCaption}<Heart size={15} strokeWidth={1.2} /></figcaption>
+        </motion.figure> : <figure className="hero-photo-placeholder" aria-hidden="true"><img src={CONFIG.hero.portrait} alt="" fetchPriority="high" /><figcaption>{CONFIG.hero.photoCaption}</figcaption></figure>}
         <div className="exp-birthday-seal"><small>{CONFIG.hero.sealTop}</small><strong>{CONFIG.person.age}</strong><small>{CONFIG.hero.sealBottom}</small></div>
       </motion.div>
     </div>

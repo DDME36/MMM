@@ -163,3 +163,35 @@ html.has-chapter-scroll .experience-main { touch-action: pan-x pinch-zoom; }
 html[data-motion="reduced"] { scroll-snap-type: none; }
 html[data-motion="reduced"] .journey-star, html[data-motion="reduced"] .journey-thread { display: none; }
 html[data-motion="reduced"] .player-wave i, html[data-motion="reduced"] .journey-chapter-name > span { animation: none; }
+
+/* The photograph inside the invitation becomes the first-page polaroid. */
+.invitation-photo-reveal { position: absolute; inset: 15px 0 auto; z-index: 2; display: flex; justify-content: center; pointer-events: none; }
+.gate-photo-card { width: min(54%, 205px); margin: 0; padding: 9px 9px 0; background: var(--paper); box-shadow: 0 12px 30px #47372a22; }
+.gate-photo-card img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.gate-photo-card figcaption { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 6px; font: italic 10px var(--display); color: var(--muted); }
+.gate-photo-card figcaption svg { flex-shrink: 0; }
+.hero-photo-placeholder { visibility: hidden; }
+
+/* A small pool of warm light breathes with playback, never while paused. */
+.player-artwork-frame { position: relative; width: 100%; height: 100%; min-height: 0; min-width: 0; border-radius: 8px; isolation: isolate; }
+.player-artwork-glow { position: absolute; inset: -5px; z-index: -1; border-radius: inherit; pointer-events: none; background: linear-gradient(135deg, var(--icing), var(--rose) 55%, var(--flame)); filter: blur(11px); -webkit-filter: blur(11px); opacity: 0; transition: opacity .6s ease; animation: album-light-breathe var(--album-glow-time) ease-in-out infinite paused; }
+.is-playing .player-artwork-glow { opacity: .68; animation-play-state: running; }
+.birthday-experience .player-artwork { position: relative; z-index: 0; }
+@keyframes album-light-breathe { 0%,100% { transform: scale(.98); } 50% { transform: scale(1.07, 1.12); } }
+.rewind-bento-grid:not(.bento-reveal) .player-artwork-glow,
+.motion-paused .player-artwork-glow { animation-play-state: paused; }
+
+/* One finite light sweep seals the letter only after the text is complete. */
+.exp-birthday-letter { position: relative; isolation: isolate; overflow: hidden; }
+.exp-birthday-letter > :not(.sr-only) { position: relative; z-index: 1; }
+.exp-birthday-letter::after { content: ''; position: absolute; inset: -15% auto -15% 0; width: 60%; pointer-events: none; z-index: 0; opacity: 0; background: linear-gradient(90deg, transparent, var(--icing) 42%, var(--paper) 52%, transparent); transform: translateX(-160%) skewX(-15deg); }
+.exp-birthday-letter.is-written::after { animation: letter-light-pass var(--letter-light-time) cubic-bezier(.16,1,.3,1) .25s 1 both; }
+.exp-birthday-letter:not(.is-letter-visible)::after,
+.motion-paused .exp-birthday-letter::after { animation-play-state: paused; }
+@keyframes letter-light-pass {
+  0% { opacity: 0; transform: translateX(-160%) skewX(-15deg); }
+  18% { opacity: .75; }
+  75% { opacity: .5; }
+  100% { opacity: 0; transform: translateX(280%) skewX(-15deg); }
+}
+@media (max-height: 500px) { .gate-photo-card { width: 45%; padding: 6px 6px 0; } .gate-photo-card figcaption { min-height: 25px; font-size: 8px; } }

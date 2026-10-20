@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { CONFIG } from '../config';
@@ -38,6 +38,9 @@ function NumberCandle({ digit, blown }: { digit: string; blown: boolean }) {
 }
 
 export function TypewriterWish({ ready }: { ready: boolean }) {
+  const article = useRef<HTMLElement>(null);
+  const visible = useInView(article, { amount: .2 });
+  const [lightSent, setLightSent] = useState(false);
   const letters = useMemo(() => graphemes(CONFIG.cake.mainWish), []);
   const [count, setCount] = useState(0);
   const { reduced } = usePresentationMotion();
@@ -47,7 +50,8 @@ export function TypewriterWish({ ready }: { ready: boolean }) {
     return () => window.clearInterval(timer);
   }, [letters.length, reduced, ready]);
   const complete = reduced || count >= letters.length;
-  return <motion.article className="exp-birthday-letter" initial={{ opacity: 0, y: reduced ? 0 : 25 }} animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 25 }} transition={{ duration: 0.65 }}>
+  useEffect(() => { if (ready && complete && visible) setLightSent(true); }, [ready, complete, visible]);
+  return <motion.article ref={article} className={`exp-birthday-letter ${lightSent ? 'is-written' : ''} ${visible ? 'is-letter-visible' : ''}`} style={{ '--letter-light-time': `${CONFIG.motion.letterLightMs}ms` } as CSSProperties} initial={{ opacity: 0, y: reduced ? 0 : 25 }} animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 25 }} transition={{ duration: 0.65 }}>
     <div className="exp-letter-meta"><span>{CONFIG.cake.dedication}</span><span>{birthdayDate()}</span></div>
     <h3 id="birthday-letter-title">{CONFIG.cake.letterTitle}<Heart size={22} strokeWidth={1.2} /></h3>
     <p className="sr-only">{CONFIG.cake.mainWish}</p>
