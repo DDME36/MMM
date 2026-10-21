@@ -43,12 +43,14 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
       const progress = document.querySelector('.journey-progress')?.getBoundingClientRect();
       const topInset = Math.max(24, (controls?.bottom ?? viewportTop + 48) - viewportTop + 16);
       const bottomInset = Math.max(24, viewportTop + viewport - (progress?.top ?? viewportTop + viewport - 48) + 16);
-      const landmarks = window.matchMedia('(max-width: 768px)').matches ? chapters.flatMap(chapter => {
+      // Cards are packed per viewport on every size: tablets (iPad portrait and landscape) have
+      // chapters taller than the screen too. Chapters that already fit add no extra stops.
+      const landmarks = chapters.flatMap(chapter => {
         const group = chapter.querySelector<HTMLElement>('[data-reading-group]');
         if (!group) return [];
         const items = [...group.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.matches('.sr-only, [hidden], [aria-hidden="true"]'));
         return readingStops(items.map(item => ({ top: layoutTop(item), bottom: layoutTop(item) + item.offsetHeight })), layoutTop(chapter), viewport, topInset, bottomInset);
-      }) : [];
+      });
       return journeyStops(chapters.map(layoutTop), viewport, document.documentElement.scrollHeight, landmarks);
     };
     const stop = () => { cancelAnimationFrame(frame); busy = false; destination = null; latched = false; accumulated = 0; };
