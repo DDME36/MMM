@@ -43,11 +43,13 @@ function useChapterScroll(main: RefObject<HTMLElement | null>, enabled: boolean,
       const progress = document.querySelector('.journey-progress')?.getBoundingClientRect();
       const topInset = Math.max(24, (controls?.bottom ?? viewportTop + 48) - viewportTop + 16);
       const bottomInset = Math.max(24, viewportTop + viewport - (progress?.top ?? viewportTop + viewport - 48) + 16);
-      // Cards are packed per viewport on every size: tablets (iPad portrait and landscape) have
-      // chapters taller than the screen too. Chapters that already fit add no extra stops.
+      // Cards are packed per viewport on every size: tablets (iPad portrait and landscape) can have
+      // chapters taller than the screen too. Beyond phones, the progress indicator sits in a corner,
+      // so a chapter that already fits one screen needs no stop besides its own.
+      const phone = window.matchMedia('(max-width: 768px)').matches;
       const landmarks = chapters.flatMap(chapter => {
         const group = chapter.querySelector<HTMLElement>('[data-reading-group]');
-        if (!group) return [];
+        if (!group || (!phone && chapter.offsetHeight <= viewport + 1)) return [];
         const items = [...group.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.matches('.sr-only, [hidden], [aria-hidden="true"]'));
         return readingStops(items.map(item => ({ top: layoutTop(item), bottom: layoutTop(item) + item.offsetHeight })), layoutTop(chapter), viewport, topInset, bottomInset);
       });
